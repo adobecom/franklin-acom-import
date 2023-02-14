@@ -47,9 +47,7 @@ export default function guessColumnsBlocks(main, document) {
             row.push(col.innerHTML);
           });
           cells.push(row);
-          debugger
-  
-  
+          
         } else {
           const tc = columns[0].textContent.trim();
           if (tc !== '') {
