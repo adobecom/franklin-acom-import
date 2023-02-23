@@ -14,7 +14,6 @@ export default function guessColumnsBlocks(main, document) {
         'id-a5d0a62c3b5ba595e2bb739f43c3e216',
     ];
     for (var i = 0; i < z_pattern_id.length; i++) {
-        debugger
         let containers = [...main.querySelectorAll(`#${z_pattern_id[i]} .dexter-FlexContainer-Items`)]?.filter((c) => {
             if (c.childElementCount < 2) return false; // ignore empty containers and single element containers
             let ancestor = c; let keep;
