@@ -14,15 +14,26 @@
 /* eslint-disable no-console, class-methods-use-this */
 
 /*
+  import constants
+*/
+import constants from './constants.js';
+
+/*
+  import services
+*/
+import getBlocks from './services/getBlocks.js';
+
+/*
   import rules
 */
-
 import createAccordionBlocks from './rules/accordion.js';
 import createMarqueeBlocks from './rules/marquee.js';
 import createIconBlock from './rules/iconblock.js';
-import tabsToBlocks from './rules/tabs.js';
-import guessRiverflowBlocks from './rules/zPattern.js';
-
+import createZPatternBlock from './rules/zPattern.js';
+import createMasonryBlock from './rules/masonry.js';
+import createMerchBlock from './rules/merchBlock.js';
+import createAsideBlocks from './rules/aside.js';
+// import tabsToBlocks from './rules/tabs.js';
 // import guessColumnsBlocks from './rules/columns.js';
 
 export default {
@@ -35,35 +46,90 @@ export default {
    * @param {object} params Object containing some parameters given by the import process.
    * @returns {HTMLElement} The root element to be transformed
    */
-  transformDOM: ({
+  transformDOM: async ({
     document,
     url,
     html,
     params,
   }) => {
-    const main = document.body;
+    const { body } = document;
 
-    main.querySelectorAll('s').forEach((s) => {
+    body.querySelectorAll('s').forEach((s) => {
       const span = document.createElement('span');
       span.innerHTML = s.innerHTML;
       s.replaceWith(span);
     });
 
     /*
+      missing script table
+    */
+    const missingScriptTable = (blockName, doc) => {
+      const cells = [[`${blockName}?`], ['script Missing']];
+      const table = WebImporter.DOMUtils.createTable(cells, doc);
+      return table;
+    };
+
+    /*
       blocks
     */
-    createAccordionBlocks(main, document);
-    createMarqueeBlocks(main, document);
-    createIconBlock(main, document);
-    tabsToBlocks(main, document);
-    guessRiverflowBlocks(main, document);
-    // guessColumnsBlocks(main, document);
+    const blocks = await getBlocks();
+    const pageBlocks = blocks[params.originalURL];
+    const allBlockIds = pageBlocks ? Object.keys(pageBlocks) : [];
+
+    const findOffsetDiff = () => {
+      const addedTables = [...body.querySelectorAll('.import-table')];
+      let addedOffset = 0;
+      addedTables.forEach((table) => {
+        addedOffset += table.querySelectorAll('div').length;
+      });
+      return addedOffset;
+    };
+
+    const createBlocks = (blockName, divOffset) => {
+      const offsetDiff = findOffsetDiff();
+      const main = body.querySelector('main');
+      const block = main.querySelectorAll('div')[divOffset + offsetDiff];
+      switch (blockName) {
+        case constants.marquee:
+          if (block.querySelector('h1')) {
+            createMarqueeBlocks(block, document);
+          } else {
+            createZPatternBlock(block, document);
+          }
+          break;
+        case constants.iconblock:
+          createIconBlock(block, document);
+          break;
+        case constants.accordion:
+          createAccordionBlocks(block, document);
+          break;
+        case constants.aside:
+          createAsideBlocks(block, document);
+          break;
+        case constants.masonry:
+          createMasonryBlock(block, document);
+          break;
+        case constants.merchblock:
+          createMerchBlock(block, document);
+          break;
+        default:
+          // default
+          block.before(document.createElement('hr'));
+          block.replaceWith(missingScriptTable(blockName, document));
+      }
+    };
+
+    allBlockIds.forEach((id) => {
+      const blockName = pageBlocks[id];
+      const divOffset = parseInt(id.split('-').pop(), 10);
+      createBlocks(blockName, divOffset);
+    });
     /*
       clean
     */
 
     // use helper method to remove header, footer, etc.
-    WebImporter.DOMUtils.remove(main, [
+    WebImporter.DOMUtils.remove(body, [
       '.globalnavfooter',
       '.globalnavheader',
       '.modalContainer',
@@ -71,13 +137,13 @@ export default {
       'footer',
       '.language-Navigation',
       '#onetrust-consent-sdk',
-      // [Docx issue] : Image files having convertToBlob issue while converting to png.
+      // [Docx preview issue] : Image files having convertToBlob issue while converting to png.
       'img[src="/content/dam/cc/us/en/creative-cloud/cc_express_appicon_256.svg"]',
       'img[src="/content/dam/cc/one-console/icons_rebrand/adobeexpress.svg"]',
       'img[src="/content/dam/cct/creativecloud/business/teams/mnemonics/cc-express.svg"]',
       'img[src="/content/dam/shared/images/product-icons/svg/cc-express.svg"]',
     ]);
 
-    return main;
+    return body;
   },
 };
