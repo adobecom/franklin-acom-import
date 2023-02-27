@@ -21,6 +21,8 @@ import createAccordionBlocks from './rules/accordion.js';
 import createMarqueeBlocks from './rules/marquee.js';
 import createIconBlock from './rules/iconblock.js';
 import tabsToBlocks from './rules/tabs.js';
+import guessRiverflowBlocks from './rules/zPattern.js';
+
 // import guessColumnsBlocks from './rules/columns.js';
 
 export default {
@@ -54,6 +56,7 @@ export default {
     createMarqueeBlocks(main, document);
     createIconBlock(main, document);
     tabsToBlocks(main, document);
+    guessRiverflowBlocks(main, document);
     // guessColumnsBlocks(main, document);
     /*
       clean
