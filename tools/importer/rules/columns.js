@@ -1,6 +1,6 @@
 /* global WebImporter */
-export default function guessColumnsBlocks(main, document) {
-  const containers = [...main.querySelectorAll('.dexter-FlexContainer-Items')].filter((c) => {
+export default function guessColumnsBlocks(block, document, blockName) {
+  const containers = [...block.querySelectorAll('.dexter-FlexContainer-Items')].filter((c) => {
     // ignore empty containers and single element containers
     if (c.childElementCount < 2) return false;
     let ancestor = c; let keep;
@@ -19,15 +19,15 @@ export default function guessColumnsBlocks(main, document) {
       container.before(columns[0]);
       columns = columns.slice(1);
     }
-    if (columns.length === 0) return;
     if (columns.length > 1) {
-      const cells = [['Columns']];
+      const cells = [[blockName]];
       columns.forEach((col) => {
         const row = [];
         row.push(col.innerHTML);
         cells.push(row);
       });
       const table = WebImporter.DOMUtils.createTable(cells, document);
+      table.classList.add('import-table');
       container.replaceWith(table);
     } else {
       const tc = columns[0].textContent.trim();
@@ -36,4 +36,6 @@ export default function guessColumnsBlocks(main, document) {
       }
     }
   });
+  block.before(document.createElement('hr'));
+  block.replaceWith(...block.querySelectorAll('.import-table'));
 }
