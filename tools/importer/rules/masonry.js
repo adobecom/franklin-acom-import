@@ -26,6 +26,17 @@ const createTextBlock = (textElement, document) => {
   textElement.replaceWith(table);
 };
 
+const attachBackgroundImage = (section, document) => {
+  const tags = [...section.querySelectorAll('div[style]')];
+  tags.forEach((tag) => {
+    const url = tag.getAttribute('style').split('"')[1];
+    const imageLink = document.createElement('a');
+    imageLink.innerHTML = url;
+    imageLink.href = url;
+    tag.insertAdjacentElement('afterend', imageLink);
+  });
+};
+
 export default function createMasonryBlock(block, document) {
   const dexterSpacer = block.querySelector('.dexter-Spacer');
   if (dexterSpacer) {
@@ -56,6 +67,7 @@ export default function createMasonryBlock(block, document) {
       const cells = [['Columns']];
       const row = [];
       columns.forEach((col) => {
+        attachBackgroundImage(col, document);
         row.push(col.innerHTML);
       });
       cells.push(row);

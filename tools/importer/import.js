@@ -24,6 +24,11 @@ import constants from './constants.js';
 import getBlocks from './services/getBlocks.js';
 
 /*
+  import utils
+*/
+import rgbToHex from './utils.js';
+
+/*
   import rules
 */
 import createAccordionBlocks from './rules/accordion.js';
@@ -46,6 +51,67 @@ export default {
    * @param {object} params Object containing some parameters given by the import process.
    * @returns {HTMLElement} The root element to be transformed
    */
+  preprocess: async ({
+    document,
+    url,
+    html,
+    params,
+  }) => {
+    const { body } = document;
+
+    /*
+      clean
+    */
+    // use helper method to remove header, footer, etc.
+    WebImporter.DOMUtils.remove(body, [
+      '.globalnavfooter',
+      '.globalnavheader',
+      '.modalContainer',
+      'header',
+      'footer',
+      '.language-Navigation',
+      '#onetrust-consent-sdk',
+      // [Docx preview issue] : Image files having convertToBlob issue while converting to png.
+      'img[src="/content/dam/cc/us/en/creative-cloud/cc_express_appicon_256.svg"]',
+      'img[src="/content/dam/cc/one-console/icons_rebrand/adobeexpress.svg"]',
+      'img[src="/content/dam/cct/creativecloud/business/teams/mnemonics/cc-express.svg"]',
+      'img[src="/content/dam/shared/images/product-icons/svg/cc-express.svg"]',
+    ]);
+
+    const main = document.querySelector('main');
+
+    // set backgroundColor attribute
+    const elements = main.querySelectorAll('*');
+    elements.forEach((element) => {
+      const styles = window.getComputedStyle(element);
+      const colors = ['rgba(0, 0, 0, 0)', 'rgb(255, 255, 255)', 'rgb(0, 0, 0)'];
+      if (!colors.includes(styles.backgroundColor)) {
+        element.setAttribute('data-bgcolor', rgbToHex(styles.backgroundColor));
+      }
+    });
+
+    // set height attribute
+    const blocks = await getBlocks();
+    const pageBlocks = blocks[params.originalURL];
+    const allBlockIds = pageBlocks ? Object.keys(pageBlocks) : [];
+    let offsetDiff = 0;
+    let latestOffset = 0;
+    let prevOffset = 0;
+    allBlockIds.forEach((id) => {
+      const currentOffset = parseInt(id.split('-').pop(), 10);
+      latestOffset = latestOffset + offsetDiff + currentOffset - prevOffset;
+      const block = body.querySelectorAll('div')[latestOffset];
+      block.setAttribute('data-height', block.clientHeight);
+      prevOffset = currentOffset;
+      offsetDiff = block.querySelectorAll('div').length + 1;
+    });
+
+    params.allBlocks = allBlockIds.map((id) => ({
+      id,
+      name: pageBlocks[id],
+    }));
+  },
+
   transformDOM: async ({
     document,
     url,
@@ -63,8 +129,8 @@ export default {
     /*
       missing script table
     */
-    const missingScriptTable = (blockName, doc) => {
-      const cells = [[`${blockName}?`], ['script Missing']];
+    const missingScriptTable = (blockName, block, doc) => {
+      const cells = [[`${blockName}?`], [block]];
       const table = WebImporter.DOMUtils.createTable(cells, doc);
       return table;
     };
@@ -72,9 +138,7 @@ export default {
     /*
       blocks
     */
-    const blocks = await getBlocks();
-    const pageBlocks = blocks[params.originalURL];
-    const allBlockIds = pageBlocks ? Object.keys(pageBlocks) : [];
+    const { allBlocks } = params;
 
     const findOffsetDiff = () => {
       const addedTables = [...body.querySelectorAll('.import-table')];
@@ -87,8 +151,7 @@ export default {
 
     const createBlocks = (blockName, divOffset) => {
       const offsetDiff = findOffsetDiff();
-      const main = body.querySelector('main');
-      const block = main.querySelectorAll('div')[divOffset + offsetDiff];
+      const block = body.querySelectorAll('div')[divOffset + offsetDiff];
       switch (blockName) {
         case constants.marquee:
           if (block.querySelector('h1')) {
@@ -115,34 +178,15 @@ export default {
         default:
           // default
           block.before(document.createElement('hr'));
-          block.replaceWith(missingScriptTable(blockName, document));
+          block.replaceWith(missingScriptTable(blockName, block, document));
       }
     };
 
-    allBlockIds.forEach((id) => {
-      const blockName = pageBlocks[id];
+    allBlocks.forEach((block) => {
+      const { id, name } = block;
       const divOffset = parseInt(id.split('-').pop(), 10);
-      createBlocks(blockName, divOffset);
+      createBlocks(name, divOffset);
     });
-    /*
-      clean
-    */
-
-    // use helper method to remove header, footer, etc.
-    WebImporter.DOMUtils.remove(body, [
-      '.globalnavfooter',
-      '.globalnavheader',
-      '.modalContainer',
-      'header',
-      'footer',
-      '.language-Navigation',
-      '#onetrust-consent-sdk',
-      // [Docx preview issue] : Image files having convertToBlob issue while converting to png.
-      'img[src="/content/dam/cc/us/en/creative-cloud/cc_express_appicon_256.svg"]',
-      'img[src="/content/dam/cc/one-console/icons_rebrand/adobeexpress.svg"]',
-      'img[src="/content/dam/cct/creativecloud/business/teams/mnemonics/cc-express.svg"]',
-      'img[src="/content/dam/shared/images/product-icons/svg/cc-express.svg"]',
-    ]);
 
     return body;
   },

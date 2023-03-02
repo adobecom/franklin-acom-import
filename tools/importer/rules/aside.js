@@ -1,10 +1,13 @@
 /* global WebImporter */
 export default function createAsideBlocks(block, document) {
   const cells = [['aside (notification, small)']];
-  // empty row for background image
-  cells.push([' ']);
-  const contentWrapper = document.createElement('div');
 
+  // background color or background image
+  const bgImage = block.querySelector('div[style]')?.getAttribute('style').split('"')[1];
+  const bgcolor = block.querySelector('div[data-bgcolor]')?.getAttribute('data-bgcolor');
+  cells.push([bgImage || bgcolor || ' ']);
+
+  const contentWrapper = document.createElement('div');
   // Selecting all images
   const images = block.querySelectorAll('.image img');
   const imageWrapper = document.createElement('p');
