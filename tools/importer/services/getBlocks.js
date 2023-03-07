@@ -1,6 +1,13 @@
-export default async function getBlocks() {
-  // update mock url later
-  const response = await fetch('https://run.mocky.io/v3/9325bf4a-5be9-4700-8b0c-ad60e25e1693');
-  const data = await response.json();
-  return data;
+export default async function getBlocks(url) {
+  try {
+    const parsedURL = new URL(url);
+    const relativePath = parsedURL.pathname.slice(1).split('/');
+    relativePath.pop();
+    const jsonPath = ['https://aishwaryamathuria.github.io/franklin-cc-json/cc', ...[relativePath], 'info.json'].join('/');
+    const response = await fetch(jsonPath);
+    const data = await response.json();
+    return data;
+  } catch (err) {
+    return {};
+  }
 }
