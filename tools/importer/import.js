@@ -91,7 +91,7 @@ export default {
     });
 
     // set height attribute
-    const blocks = await getBlocks();
+    const blocks = await getBlocks(url);
     const pageBlocks = blocks[params.originalURL];
     const allBlockIds = pageBlocks ? Object.keys(pageBlocks) : [];
     let offsetDiff = 0;
