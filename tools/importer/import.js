@@ -154,6 +154,7 @@ export default {
       const block = body.querySelectorAll('div')[divOffset + offsetDiff];
       switch (blockName) {
         case constants.marquee:
+        case constants.zpattern:
           if (block.querySelector('h1')) {
             createMarqueeBlocks(block, document);
           } else {
