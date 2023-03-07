@@ -1,9 +1,29 @@
 /* global WebImporter */
+const marqueeVariation = (marqueeHeight) => {
+  let variation = '';
+  switch (marqueeHeight) {
+    case 360:
+      variation = 'Marquee (small)';
+      break;
+    case 560:
+      variation = 'Marquee';
+      break;
+    case 700:
+      variation = 'Marquee (large)';
+      break;
+    default:
+      variation = 'Marquee';
+      break;
+  }
+  return variation;
+};
+
 export default function createMarqueeBlocks(block, document) {
+  const blockHeight = parseInt(block.getAttribute('data-height'), 10);
   const textElement = document.createElement('div');
 
   // Create table for marquee
-  const cells = [['Marquee']];
+  const cells = [[marqueeVariation(blockHeight)]];
 
   // Check if marquee has background video
   const videoWrapper = block.querySelector('.video-Wrapper source');

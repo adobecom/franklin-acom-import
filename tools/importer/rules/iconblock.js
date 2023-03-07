@@ -54,7 +54,17 @@ const creativityForAllIconBlock = (block, document) => {
       const table = WebImporter.DOMUtils.createTable(cells, document);
       table.classList.add('import-table');
       block.before(document.createElement('hr'));
-      block.replaceWith(table);
+      const sectionMetadataCells = [
+        ['Section Metadata'],
+        ['style', 'xxxl spacing'],
+      ];
+      // section metadata Table
+      const sectionMetaDataTable = WebImporter.DOMUtils.createTable(
+        sectionMetadataCells,
+        document,
+      );
+      sectionMetaDataTable.classList.add('import-table');
+      block.replaceWith(table, sectionMetaDataTable);
     }
   };
 
@@ -130,6 +140,7 @@ const creativityForAllIconBlock = (block, document) => {
 
 const expressIconBlock = (block, document) => {
   // all different blocks
+  const bgImage = block.querySelector('div[style]').getAttribute('style').split('"')[1];
   const metaData = block.querySelectorAll('.position');
 
   // icon block selectors
@@ -213,6 +224,10 @@ const expressIconBlock = (block, document) => {
     ['Section Metadata'],
     ['style', 'xxxl spacing'],
   ];
+
+  if (bgImage) {
+    sectionMetadataCells.push(['background', bgImage]);
+  }
 
   // section metadata Table
   const sectionMetaDataTable = WebImporter.DOMUtils.createTable(
