@@ -130,7 +130,7 @@ export default {
       missing script table
     */
     const missingScriptTable = (blockName, block, doc) => {
-      const cells = [[`${blockName}?`], [block]];
+      const cells = [[`${blockName}?`], [block.textContent]];
       const table = WebImporter.DOMUtils.createTable(cells, doc);
       return table;
     };
@@ -175,6 +175,9 @@ export default {
           break;
         case constants.merchblock:
           createMerchBlock(block, document);
+          break;
+        case constants.spacer:
+          block.remove();
           break;
         default:
           // default

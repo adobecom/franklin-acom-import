@@ -6,4 +6,7 @@ export default {
   masonry: 'masonry',
   accordion: 'accordion',
   merchblock: 'merchblock',
+  spacer: 'spacer',
+  text: 'text',
+  cards: 'cards',
 };
