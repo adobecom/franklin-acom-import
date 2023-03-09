@@ -1,5 +1,23 @@
+
+const zPatternVariation = (zPatternHeight) => {
+  let variation = '';
+  switch (zPatternHeight) {
+    case 303:
+      variation = 'zPattern (small)';
+      break;
+    case 350:
+      variation = 'zPattern (large)';
+      break;
+    default:
+      variation = 'zPattern';
+      break;
+  }
+  return variation;
+};
+
 /* global WebImporter */
 export default function createZPatternBlock(block, document) {
+  const blockHeight = parseInt(block.getAttribute('data-height'), 10);
   const containers = [
     ...block.querySelectorAll('.dexter-FlexContainer-Items'),
   ].filter((c) => {
@@ -13,9 +31,11 @@ export default function createZPatternBlock(block, document) {
     return keep;
   });
 
+
+
   containers.forEach((container) => {
     const columns = [...container.children];
-    const cells = [['Z Pattern(small)']];
+    const cells = [[zPatternVariation(blockHeight)]];
     // empty row for title and description
     cells.push([' ']);
     const row = [];
