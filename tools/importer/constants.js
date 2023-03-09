@@ -9,4 +9,5 @@ export default {
   spacer: 'spacer',
   text: 'text',
   cards: 'cards',
+  howto: 'howto',
 };

@@ -38,6 +38,8 @@ import createZPatternBlock from './rules/zPattern.js';
 import createMasonryBlock from './rules/masonry.js';
 import createMerchBlock from './rules/merchBlock.js';
 import createAsideBlocks from './rules/aside.js';
+import guessHowToBlocks from './rules/howTo.js';
+
 // import tabsToBlocks from './rules/tabs.js';
 // import guessColumnsBlocks from './rules/columns.js';
 
@@ -175,6 +177,9 @@ export default {
           break;
         case constants.merchblock:
           createMerchBlock(block, document);
+          break;
+        case constants.howto:
+          guessHowToBlocks(block, document);
           break;
         case constants.spacer:
           block.remove();
