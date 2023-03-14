@@ -69,11 +69,13 @@ export default function createMarqueeBlocks(block, document) {
   }
 
   // Check if marquee has content
-  let marqueeContent = null;
-  if (block.querySelector('p').textContent) {
-    marqueeContent = document.createElement('p');
-    marqueeContent.innerHTML = block.querySelector('p').textContent;
-    textElement.appendChild(marqueeContent);
+  if (block.querySelectorAll('p').length) {
+    [...block.querySelectorAll('p')].forEach((para) => {
+      let marqueeContent = null;
+      marqueeContent = document.createElement('p');
+      marqueeContent.innerHTML = para.textContent;
+      textElement.appendChild(marqueeContent);
+    });
   }
 
   // Check if marquee has white border cta
