@@ -21,9 +21,11 @@ const createTextBlock = (textElement, document) => {
   if (cellContent.childElementCount) {
     cells.push([cellContent]);
   }
-  const table = WebImporter.DOMUtils.createTable(cells, document);
-  table.classList.add('import-table');
-  textElement.replaceWith(table);
+  if (cells.length > 1) {
+    const table = WebImporter.DOMUtils.createTable(cells, document);
+    table.classList.add('import-table');
+    textElement.replaceWith(table);
+  }
 };
 
 const attachBackgroundImage = (section, document) => {
