@@ -157,10 +157,10 @@ const createCarousel = ({ blockName, uniqueId, document }) => {
 
 export default function createCarouselBlocks(blockName, block, document) {
   const elements = [];
-  const carouselTitleDiv = block.querySelector('.dexter-FlexContainer > .dexter-FlexContainer-Items > title :not(.dexter-carousel, .hawks-MultiViewCarousel)');
-  const carouselTitle = carouselTitleDiv?.querySelector(':scope > cmp-title h2');
-  const carouselDescriptionDiv = block.querySelector('.dexter-FlexContainer > .dexter-FlexContainer-Items > .text :not(.dexter-carousel, .hawks-MultiViewCarousel)');
-  const carouselDescription = carouselDescriptionDiv?.querySelector(':scope > cmp-text p');
+  const carouselTitleDiv = block.querySelector('.dexter-FlexContainer > .dexter-FlexContainer-Items > .title:not(.dexter-carousel, .hawks-MultiViewCarousel)');
+  const carouselTitle = carouselTitleDiv?.querySelector(':scope > .cmp-title h2');
+  const carouselDescriptionDiv = block.querySelector('.dexter-FlexContainer > .dexter-FlexContainer-Items > .text:not(.dexter-carousel, .hawks-MultiViewCarousel) ');
+  const carouselDescription = carouselDescriptionDiv?.querySelector(':scope > .cmp-text p');
   const uniqueId = 'Carousel container';
   const inputParams = {
     block,
