@@ -41,9 +41,20 @@ const detectSlideVariant = (slide) => {
     isMarquee,
   };
 };
-const makeText = ({ slide }) => {
-  const para = slide.querySelector('.text .cmp-text p');
-  return [para];
+const makeText = ({ slide, document }) => {
+  const textContent = slide.querySelectorAll('.text .cmp-text p,h1');
+  const textTableCells = [['Text']];
+  const para = document.createElement('p');
+  const paraFragment = document.createDocumentFragment();
+  textContent.forEach((textNode) => {
+    paraFragment.append(textNode);
+  });
+  para.appendChild(paraFragment);
+  textTableCells.push([para]);
+  const textTable = window.WebImporter.DOMUtils
+    .createTable(textTableCells, document);
+  textTable.classList.add('.import-table');
+  return [textTable];
 };
 
 const makeVideo = ({ slide: slideBlock }) => {
