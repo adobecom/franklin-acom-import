@@ -1,12 +1,13 @@
 /**
- * TODO: premire rush marquee
  * TODO: make makeText more genric---> need testing;
- * TODO: cant catch text with &nbsp
+ * TODO: styling variant needs to get added
  */
 const compose = (...fns) => (inputParams) => fns.reduce((acc, fn) => {
   const result = fn(inputParams, acc);
   return [...acc, ...result];
 }, []);
+
+const generateUniqueId = () => `carousel-${Math.random().toString(16).slice(2)}`;
 
 const makeSectionMetadataForSlides = (unquieId, document, slide) => {
   const sectionMetaDataCells = [['section-metadata'], ['carousel', `${unquieId}`]];
@@ -27,7 +28,6 @@ const makeSectionMetadataForSlides = (unquieId, document, slide) => {
 
 const makeText = ({ slide, document, isElementReturn = false }) => {
   const textContents = slide.querySelectorAll('.text .cmp-text p,h1');
-  const textTableCells = [['Text']];
   const para = document.createElement('p');
   const paraFragment = document.createDocumentFragment();
   textContents.forEach((textNode) => {
@@ -37,18 +37,17 @@ const makeText = ({ slide, document, isElementReturn = false }) => {
   if (isElementReturn) {
     return para;
   }
-  textTableCells.push([para]);
-  const textTable = window.WebImporter.DOMUtils
-    .createTable(textTableCells, document);
-  textTable.classList.add('import-table');
-  return [textTable];
+  return [para];
 };
 
-const makeVideo = ({ slide: slideBlock }) => {
+const makeVideo = ({ slide: slideBlock, document }) => {
   const videoDiv = slideBlock.querySelector('.has-video > .video-Wrapper');
   const videoSource = videoDiv.querySelector('video.video-desktop source');
   const sourceUrl = videoSource.getAttribute('src');
-  return [sourceUrl];
+  const a = document.createElement('a');
+  a.innerHTML = sourceUrl;
+  a.setAttribute('href', sourceUrl);
+  return [a];
 };
 
 const makeImage = ({ slide, document }) => {
@@ -68,8 +67,16 @@ const makeImage = ({ slide, document }) => {
       } else {
         imgSrc = image.getAttribute('src');
       }
-      imgLink = document.createElement('img');
-      imgLink.setAttribute('src', imgSrc);
+
+      if (imgSrc.includes('.svg')) {
+        imgLink = document.createElement('a');
+        imgLink.innerHTML = imgSrc;
+        imgLink.setAttribute('href', imgSrc);
+      } else {
+        imgLink = document.createElement('img');
+        imgLink.setAttribute('src', imgSrc);
+        imgLink.setAttribute('alt', alt);
+      }
     }
     elements.push(imgLink);
   });
@@ -77,9 +84,9 @@ const makeImage = ({ slide, document }) => {
 };
 
 const makeMarquee = ({ slide, document }) => {
-  const marqueeCells = [['marquee']];
+  const marqueeCells = [['Marquee']];
   if (slide.querySelector('.has-video')) {
-    const videoSource = makeVideo({ slide });
+    const videoSource = makeVideo({ slide, document });
     marqueeCells.push(videoSource);
   }
   const textElement = document.createElement('div');
@@ -102,7 +109,7 @@ const createSlideBlocks = (block, document) => {
     return makeImage({ slide: block, document });
   }
   if (block.className.includes('has-video')) {
-    return makeVideo({ slide: block });
+    return makeVideo({ slide: block, document });
   }
   if (block.className.includes('text')) {
     return makeText({ slide: block, document });
@@ -147,7 +154,7 @@ const createSlides = ({ uniqueId, block, document }) => {
 const createCarousel = ({ blockName, uniqueId, document }) => {
   const cells = [[`${blockName}(container)`], [`${uniqueId}`]];
   const table = window.WebImporter.DOMUtils.createTable(cells, document);
-  const sectionMetadataCells = [['section-metadata'], ['style', 'xxl spacing,center '], ['background', '#f0f0f0 ']];
+  const sectionMetadataCells = [['section-metadata'], ['style', 'xxl spacing, center '], ['background', '#f0f0f0 ']];
   const metaTable = window.WebImporter.DOMUtils.createTable(sectionMetadataCells, document);
   metaTable.classList.add('import-table');
   return [table, metaTable, document.createElement('hr')];
@@ -159,7 +166,7 @@ export default function createCarouselBlocks(blockName, block, document) {
   const carouselTitle = carouselTitleDiv?.querySelector(':scope > .cmp-title h1');
   const carouselDescriptionDiv = block.querySelector('.dexter-FlexContainer > .dexter-FlexContainer-Items > .text');
   const carouselDescription = carouselDescriptionDiv?.querySelector(':scope > .cmp-text p');
-  const uniqueId = 'Carousel container';
+  const uniqueId = generateUniqueId();
   const inputParams = {
     block,
     blockName,
