@@ -1,7 +1,3 @@
-/**
- * TODO: make makeText more genric---> need testing;
- * TODO: styling variant needs to get added
- */
 const compose = (...fns) => (inputParams) => fns.reduce((acc, fn) => {
   const result = fn(inputParams, acc);
   return [...acc, ...result];
@@ -9,13 +5,34 @@ const compose = (...fns) => (inputParams) => fns.reduce((acc, fn) => {
 
 const generateUniqueId = () => `carousel-${Math.random().toString(16).slice(2)}`;
 
+const getVariants = (block) => {
+  const variant = [];
+  if (!block?.querySelector('.dexter-Carousel-content--fullwidth, .hawks-MultiViewCarousel-content--fullwidth')) {
+    variant.push('container');
+  }
+  if (!block?.querySelector('.dexter-Carousel--previous, .hawks-MultiViewCarousel---previous')) {
+    variant.push('no-buttons');
+  }
+  let carousel = '.dexter-Carousel';
+  if (block?.querySelector('.hawks-MultiViewCarousel')) {
+    carousel = '.hawks-MultiViewCarousel';
+  }
+  const columnsPerSlideDiv = block.querySelector(`${carousel}-content[data-number-of-columns]`);
+  const columnsPerSlide = columnsPerSlideDiv?.getAttribute('data-number-of-columns');
+  if (columnsPerSlide && columnsPerSlide > 1) {
+    variant.push(`show-${columnsPerSlide}`);
+  }
+
+  return variant;
+};
+
 const makeSectionMetadataForSlides = (unquieId, document, slide) => {
   const sectionMetaDataCells = [['section-metadata'], ['carousel', `${unquieId}`]];
   const sectionMetaDataTable = window.WebImporter.DOMUtils
     .createTable(sectionMetaDataCells, document);
   const slideFlexContainer = slide?.querySelector('.dexter-FlexContainer');
   const backgroundImage = slideFlexContainer?.styles.backgroundImage;
-  const backgroundColor = slideFlexContainer?.querySelector('.dexter-FlexContainer');
+  const backgroundColor = slideFlexContainer?.getAttribute('data-bgcolor');
   if (backgroundImage) {
     sectionMetaDataCells.push(['background', backgroundImage]);
   }
@@ -95,7 +112,32 @@ const makeMarquee = ({ slide, document }) => {
   textElement.appendChild(imageBlock[0]);
   const textContents = makeText({ slide, document, isElementReturn: true });
   textElement.appendChild(textContents);
-  marqueeCells.push([textElement, '']);
+
+  let marqueeWhiteBorderButton = null;
+  const button = slide.querySelector('.spectrum-Button-cta--White');
+  if (button) {
+    marqueeWhiteBorderButton = document.createElement('a');
+    const italicsElement = document.createElement('I');
+    italicsElement.appendChild(button);
+    marqueeWhiteBorderButton.appendChild(italicsElement);
+    marqueeWhiteBorderButton.setAttribute('href', button.getAttribute('href'));
+    textElement.appendChild(marqueeWhiteBorderButton);
+  }
+
+  let marqueePrimaryCtaButton = null;
+  const accent = slide.querySelector('.spectrum-Button--cta');
+  if (accent) {
+    marqueePrimaryCtaButton = document.createElement('b');
+    const marqueePrimaryContent = document.createElement('a');
+    marqueePrimaryContent.appendChild(accent);
+    marqueePrimaryContent.setAttribute('href', accent.getAttribute('href'));
+    marqueePrimaryCtaButton.appendChild(marqueePrimaryContent);
+    const space = document.createElement('span');
+    space.innerHTML = '\u00A0';
+    textElement.appendChild(space);
+    textElement.appendChild(marqueePrimaryCtaButton);
+  }
+  marqueeCells.push([textElement]);
   const marqueeTable = window.WebImporter.DOMUtils.createTable(marqueeCells, document);
   marqueeTable.classList.add('import-table');
   return [marqueeTable];
@@ -150,11 +192,23 @@ const createSlides = ({ uniqueId, block, document }) => {
   }, []);
   return slidesElements;
 };
+const getBackgroundColor = (block) => {
+  const flexContainer = block.querySelector('.dexter-FlexContainer--GapWrapper');
+  const backgroundColor = flexContainer?.getAttribute('data-bgcolor');
+  return backgroundColor;
+};
 
-const createCarousel = ({ blockName, uniqueId, document }) => {
-  const cells = [[`${blockName}(container)`], [`${uniqueId}`]];
+const createCarousel = ({
+  block, blockName, uniqueId, document,
+}) => {
+  const variants = getVariants(block);
+  const cells = [[`${blockName}(${variants.join(',')})`], [`${uniqueId}`]];
   const table = window.WebImporter.DOMUtils.createTable(cells, document);
-  const sectionMetadataCells = [['section-metadata'], ['style', 'xxl spacing, center '], ['background', '#f0f0f0 ']];
+  const backgroundColor = getBackgroundColor(block);
+  const sectionMetadataCells = [['section-metadata'], ['style', 'xxl spacing, center ']];
+  if (backgroundColor) {
+    sectionMetadataCells.push(['background', `${backgroundColor}`]);
+  }
   const metaTable = window.WebImporter.DOMUtils.createTable(sectionMetadataCells, document);
   metaTable.classList.add('import-table');
   return [table, metaTable, document.createElement('hr')];
