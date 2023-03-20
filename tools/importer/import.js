@@ -38,6 +38,7 @@ import createZPatternBlock from './rules/zPattern.js';
 import createMasonryBlock from './rules/masonry.js';
 import createMerchBlock from './rules/merchBlock.js';
 import createAsideBlocks from './rules/aside.js';
+import createCarouselBlocks from './rules/carousel.js';
 // import tabsToBlocks from './rules/tabs.js';
 // import guessColumnsBlocks from './rules/columns.js';
 
@@ -178,6 +179,10 @@ export default {
           break;
         case constants.spacer:
           block.remove();
+          break;
+
+        case constants.carousel:
+          createCarouselBlocks(blockName, block, document);
           break;
         default:
           // default
