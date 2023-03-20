@@ -59,6 +59,10 @@ export default {
     params,
   }) => {
     const { body } = document;
+    const ele = body.querySelectorAll('p');
+    ele.forEach((node) => {
+      node.innerHTML = node.innerHTML.replace(/&nbsp;/g, ' ');
+    });
 
     /*
       clean
@@ -121,7 +125,7 @@ export default {
   }) => {
     const { body } = document;
 
-    body.querySelectorAll('s').forEach((s) => {
+    body.querySelectorAll('s,u').forEach((s) => {
       const span = document.createElement('span');
       span.innerHTML = s.innerHTML;
       s.replaceWith(span);
