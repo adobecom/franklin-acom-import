@@ -53,7 +53,6 @@ const makeText = ({ slide, document }) => {
   textTableCells.push([para]);
   const textTable = window.WebImporter.DOMUtils
     .createTable(textTableCells, document);
-  textTable.classList.add('.import-table');
   return [textTable];
 };
 
@@ -157,9 +156,9 @@ const createCarousel = ({ blockName, uniqueId, document }) => {
 
 export default function createCarouselBlocks(blockName, block, document) {
   const elements = [];
-  const carouselTitleDiv = block.querySelector('.dexter-FlexContainer > .dexter-FlexContainer-Items > .title:not(.dexter-carousel, .hawks-MultiViewCarousel)');
-  const carouselTitle = carouselTitleDiv?.querySelector(':scope > .cmp-title h2');
-  const carouselDescriptionDiv = block.querySelector('.dexter-FlexContainer > .dexter-FlexContainer-Items > .text:not(.dexter-carousel, .hawks-MultiViewCarousel) ');
+  const carouselTitleDiv = block.querySelector('.dexter-FlexContainer > .dexter-FlexContainer-Items > .title');
+  const carouselTitle = carouselTitleDiv?.querySelector(':scope > .cmp-title h1');
+  const carouselDescriptionDiv = block.querySelector('.dexter-FlexContainer > .dexter-FlexContainer-Items > .text');
   const carouselDescription = carouselDescriptionDiv?.querySelector(':scope > .cmp-text p');
   const uniqueId = 'Carousel container';
   const inputParams = {
@@ -169,10 +168,10 @@ export default function createCarouselBlocks(blockName, block, document) {
     document,
   };
   const elementList = compose(createCarousel, createSlides)(inputParams);
-  if (carouselTitle) {
+  if (carouselTitle && !carouselTitleDiv.closest('.dexter-carousel,.hawks-MultiViewCarousel')) {
     elements.push(carouselTitle);
   }
-  if (carouselDescription) {
+  if (carouselDescription && !carouselDescriptionDiv.closest('.dexter-carousel,.hawks-MultiViewCarousel')) {
     elements.push(carouselDescription);
   }
 
