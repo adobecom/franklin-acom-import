@@ -1,11 +1,8 @@
 /**
- * TODO: To detect order of elements in the slide.
- * TODO: To background image detection for slide.
  * TODO: premire rush marquee
- * TODO: make makeText more genric\
+ * TODO: make makeText more genric---> need testing;
+ * TODO: cant catch text with &nbsp
  */
-import createMarqueeBlocks from './marquee.js';
-
 const compose = (...fns) => (inputParams) => fns.reduce((acc, fn) => {
   const result = fn(inputParams, acc);
   return [...acc, ...result];
@@ -28,31 +25,22 @@ const makeSectionMetadataForSlides = (unquieId, document, slide) => {
   return sectionMetaDataTable;
 };
 
-const detectSlideVariant = (slide) => {
-  const isVideoPresent = slide?.querySelector('.has-video > .video-Wrapper');
-  const isTextPresent = slide?.querySelector('.cmp-text');
-  const isImagePresent = slide?.querySelector('.image');
-  const isMarquee = slide?.querySelector('div[daa-lh="marquee"');
-
-  return {
-    isVideoPresent,
-    isTextPresent,
-    isImagePresent,
-    isMarquee,
-  };
-};
-const makeText = ({ slide, document }) => {
-  const textContent = slide.querySelectorAll('.text .cmp-text p,h1');
+const makeText = ({ slide, document, isElementReturn = false }) => {
+  const textContents = slide.querySelectorAll('.text .cmp-text p,h1');
   const textTableCells = [['Text']];
   const para = document.createElement('p');
   const paraFragment = document.createDocumentFragment();
-  textContent.forEach((textNode) => {
+  textContents.forEach((textNode) => {
     paraFragment.append(textNode);
   });
   para.appendChild(paraFragment);
+  if (isElementReturn) {
+    return para;
+  }
   textTableCells.push([para]);
   const textTable = window.WebImporter.DOMUtils
     .createTable(textTableCells, document);
+  textTable.classList.add('import-table');
   return [textTable];
 };
 
@@ -63,17 +51,8 @@ const makeVideo = ({ slide: slideBlock }) => {
   return [sourceUrl];
 };
 
-const makeMarquee = ({ slide, document }) => {
-  const marqueeDiv = slide.querySelector('div[daa-lh="marquee"');
-  const marqueeDivParent = marqueeDiv.parentElement;
-  createMarqueeBlocks(marqueeDiv, document);
-  const marqueeOutput = marqueeDivParent.querySelector('.import-table');
-  return [marqueeOutput];
-};
-
 const makeImage = ({ slide, document }) => {
-  const imageDiv = slide.querySelector('.image,.parabase');
-  const imageTags = imageDiv.querySelectorAll('img');
+  const imageTags = slide.querySelectorAll('img');
   const elements = [];
   let imgLink = null;
   let imgSrc = null;
@@ -97,47 +76,67 @@ const makeImage = ({ slide, document }) => {
   return elements;
 };
 
-const createSlide = (slide, uniqueId, document) => {
-  const variant = detectSlideVariant(slide);
-  const {
-    isTextPresent,
-    isVideoPresent,
-    isImagePresent,
-    isMarquee,
-  } = variant;
-  const composeFunctions = [];
-  if (isMarquee) {
-    composeFunctions.push(makeMarquee);
-  } else {
-    if (isImagePresent) {
-      composeFunctions.push(makeImage);
-    }
-
-    if (isVideoPresent) {
-      composeFunctions.push(makeVideo);
-    }
-
-    if (isTextPresent) {
-      composeFunctions.push(makeText);
-    }
+const makeMarquee = ({ slide, document }) => {
+  const marqueeCells = [['marquee']];
+  if (slide.querySelector('.has-video')) {
+    const videoSource = makeVideo({ slide });
+    marqueeCells.push(videoSource);
   }
+  const textElement = document.createElement('div');
+  const flexContainer = slide.querySelector('.dexter-FlexContainer');
+  const imageBlock = makeImage({ slide: flexContainer, document });
+  textElement.appendChild(imageBlock[0]);
+  const textContents = makeText({ slide, document, isElementReturn: true });
+  textElement.appendChild(textContents);
+  marqueeCells.push([textElement, '']);
+  const marqueeTable = window.WebImporter.DOMUtils.createTable(marqueeCells, document);
+  marqueeTable.classList.add('import-table');
+  return [marqueeTable];
+};
 
-  const elements = compose(...composeFunctions)({ slide, uniqueId, document });
-  return elements;
+const createSlideBlocks = (block, document) => {
+  if (!block) {
+    return [];
+  }
+  if (block.className.includes('image parbase')) {
+    return makeImage({ slide: block, document });
+  }
+  if (block.className.includes('has-video')) {
+    return makeVideo({ slide: block });
+  }
+  if (block.className.includes('text')) {
+    return makeText({ slide: block, document });
+  }
+  const cumlativeElements = [];
+  const { children } = block;
+  if (children && children.length > 0) {
+    Array.prototype.forEach.call(children, (childNode) => {
+      const elements = createSlideBlocks(childNode, document);
+      cumlativeElements.push(...elements);
+    });
+  }
+  return cumlativeElements;
+};
+
+const createSlide = (slide, document) => {
+  if (slide?.querySelector('div[daa-lh="marquee"')) {
+    return makeMarquee({ slide, document });
+  }
+  const flexContainer = slide.querySelector('.dexter-FlexContainer');
+  const slideElements = createSlideBlocks(flexContainer, document);
+  return slideElements;
 };
 
 const createSlides = ({ uniqueId, block, document }) => {
-  let carouselClass = '.dexter-carousel';
-  let carouselItemClass = '.dexter-Carousel';
+  let carouselClass = '.dexter-Carousel';
   if (block.querySelector('.hawks-MultiViewCarousel')) {
     carouselClass = '.hawks-MultiViewCarousel';
-    carouselItemClass = '.hawks-MultiViewCarousel';
   }
   const carouselSection = block.querySelector(`${carouselClass}-content`);
-  const slidesNodes = carouselSection.querySelectorAll(`${carouselItemClass}-item`);
+  const slidesNodes = carouselSection.querySelectorAll(`${carouselClass}-item`);
   const slides = Array.from(slidesNodes);
   const slidesElements = slides.reduce((acc, curr) => {
-    const slide = createSlide(curr, uniqueId, document);
+    const slide = createSlide(curr, document);
     slide.push(makeSectionMetadataForSlides(uniqueId, document));
     slide.push(document.createElement('hr'));
     return [...acc, ...slide];
@@ -168,10 +167,10 @@ export default function createCarouselBlocks(blockName, block, document) {
     document,
   };
   const elementList = compose(createCarousel, createSlides)(inputParams);
-  if (carouselTitle && !carouselTitleDiv.closest('.dexter-carousel,.hawks-MultiViewCarousel')) {
+  if (carouselTitle && !carouselTitleDiv.closest('.dexter-Carousel,.hawks-MultiViewCarousel')) {
     elements.push(carouselTitle);
   }
-  if (carouselDescription && !carouselDescriptionDiv.closest('.dexter-carousel,.hawks-MultiViewCarousel')) {
+  if (carouselDescription && !carouselDescriptionDiv.closest('.dexter-Carousel,.hawks-MultiViewCarousel')) {
     elements.push(carouselDescription);
   }
 
