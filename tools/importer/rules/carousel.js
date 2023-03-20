@@ -47,8 +47,16 @@ const makeText = ({ slide, document, isElementReturn = false }) => {
   const textContents = slide.querySelectorAll('.text .cmp-text p,h1');
   const para = document.createElement('p');
   const paraFragment = document.createDocumentFragment();
+  let parent = null;
   textContents.forEach((textNode) => {
-    paraFragment.append(textNode);
+    const parentText = textNode.closest('.text');
+    if (parentText.parentElement.isEqualNode(parent)) {
+      const { lastChild } = paraFragment;
+      lastChild.textContent += textNode.textContent;
+    } else {
+      paraFragment.append(textNode);
+    }
+    parent = parentText.parentElement;
   });
   para.appendChild(paraFragment);
   if (isElementReturn) {
