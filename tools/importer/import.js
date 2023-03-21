@@ -39,6 +39,7 @@ import createMasonryBlock from './rules/masonry.js';
 import createMerchBlock from './rules/merchBlock.js';
 import createAsideBlocks from './rules/aside.js';
 import createCardsBlock from './rules/cards.js';
+import longText from './rules/longText.js';
 // import tabsToBlocks from './rules/tabs.js';
 // import guessColumnsBlocks from './rules/columns.js';
 
@@ -154,6 +155,7 @@ export default {
       const offsetDiff = findOffsetDiff();
       const block = body.querySelectorAll('div')[divOffset + offsetDiff];
       switch (blockName) {
+
         case constants.marquee:
         case constants.zpattern:
           if (block.querySelector('h1')) {
@@ -182,6 +184,8 @@ export default {
           break;
         case constants.cards:
           createCardsBlock(block, document);
+        case constants.longText:
+          longText(block, document);
           break;
         default:
           // default
