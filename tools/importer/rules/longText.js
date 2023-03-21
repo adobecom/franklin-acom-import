@@ -1,12 +1,19 @@
 export default function longText(block, document) {
-  const cells = [['Longtext']];
-  const allData = [...block.querySelectorAll('main h1,h2,h3,h4,p,img, a, button')]
-  const newWrapper = document.createElement('div');
+  const allData = [...block.querySelectorAll('.text,.image,.cta')]
+
   allData.forEach((element) => {
-    newWrapper.append(element)
+    let tableName = "text(full-width)";
+    if(element.classList.contains('image')){
+         tableName = "columns";
+    }
+    const cells = [[tableName]];
+    
+    cells.push([element.cloneNode(true)]);
+    const table = WebImporter.DOMUtils.createTable(cells, document);
+    table.classList.add('import-table');
+    element.replaceWith(table);
   })
-  cells.push([newWrapper])
-  const table = WebImporter.DOMUtils.createTable(cells, document);
-  block.replaceWith(table);
+  block.before(document.createElement('hr'));
+  block.replaceWith(...block.querySelectorAll('.import-table'));
 }
 
