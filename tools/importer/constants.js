@@ -10,4 +10,5 @@ export default {
   text: 'text',
   cards: 'cards',
   carousel: 'carousel',
+  longText: 'longtext',
 };

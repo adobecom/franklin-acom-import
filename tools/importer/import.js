@@ -40,6 +40,7 @@ import createMerchBlock from './rules/merchBlock.js';
 import createAsideBlocks from './rules/aside.js';
 import createCarouselBlocks from './rules/carousel.js';
 import createCardsBlock from './rules/cards.js';
+import longText from './rules/longText.js';
 // import tabsToBlocks from './rules/tabs.js';
 // import guessColumnsBlocks from './rules/columns.js';
 
@@ -190,6 +191,9 @@ export default {
           break;
         case constants.cards:
           createCardsBlock(block, document);
+          break;
+        case constants.longText:
+          longText(block, document);
           break;
         default:
           // default
