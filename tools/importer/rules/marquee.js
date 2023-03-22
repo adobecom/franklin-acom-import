@@ -33,39 +33,39 @@ export default function createMarqueeBlocks(block, document) {
     a.innerHTML = backgroundVideoURL;
     a.setAttribute('href', backgroundVideoURL);
     cells.push([a]);
+  } else {
+    const bgImage = block.querySelector('div[style]');
+    if (bgImage) {
+      const image = bgImage?.getAttribute('style').split('"')[1];
+      cells.push([image]);
+    }
   }
 
   // Check if marquee has icon
   const images = block.querySelectorAll('img');
-  let imgLink = null;
-  let imgSrc = null;
   images.forEach((image) => {
-    if (imgSrc) {
-      return;
-    }
-    const alt = image.getAttribute('alt');
-    const src = image.getAttribute('src');
-    if (alt && alt.indexOf('icon') > -1) {
-      if (src && src.indexOf('https') === -1) {
-        imgSrc = `https://www.adobe.com/${image.getAttribute('src')}`;
-      } else {
-        imgSrc = image.getAttribute('src');
+    let imgSrc = image.getAttribute('src');
+    if (imgSrc && (imgSrc.indexOf('.svg') + 1)) {
+      if (imgSrc.indexOf('https') === -1) {
+        imgSrc = `https://www.adobe.com/${imgSrc}`;
       }
-      imgLink = document.createElement('a');
+      const imgLink = document.createElement('a');
       imgLink.innerHTML = imgSrc;
       imgLink.setAttribute('href', imgSrc);
+      textElement.appendChild(imgLink);
     }
   });
-  if (imgLink) {
-    textElement.appendChild(imgLink);
-  }
 
   // Check if marquee has h1 heading
-  let marqueeHeading = null;
-  if (block.querySelector('h1').textContent) {
-    marqueeHeading = document.createElement('h1');
-    marqueeHeading.innerHTML = block.querySelector('h1').textContent;
-    textElement.appendChild(marqueeHeading);
+  // let marqueeHeading = null;
+  const heading = block.querySelector('h1') || block.querySelector('h2') || block.querySelector('h3');
+  if (heading) {
+    const allHeadings = [...block.querySelectorAll('h1,h2,h3')];
+    const fragment = document.createDocumentFragment();
+    allHeadings.forEach((head) => {
+      fragment.append(head);
+    });
+    textElement.appendChild(fragment);
   }
 
   // Check if marquee has content
@@ -73,14 +73,14 @@ export default function createMarqueeBlocks(block, document) {
     [...block.querySelectorAll('p')].forEach((para) => {
       let marqueeContent = null;
       marqueeContent = document.createElement('p');
-      marqueeContent.innerHTML = para.textContent;
+      marqueeContent.innerHTML = para.innerHTML;
       textElement.appendChild(marqueeContent);
     });
   }
 
   // Check if marquee has white border cta
   let marqueeWhiteBorderButton = null;
-  const button = block.querySelector('.spectrum-Button--overBackground');
+  const button = block.querySelector('.spectrum-Button--overBackground') || block.querySelector('.spectrum-Button-cta--White') || block.querySelector('.spectrum-Button--staticWhite');
   if (button) {
     marqueeWhiteBorderButton = document.createElement('a');
     const italicsElement = document.createElement('I');

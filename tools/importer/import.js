@@ -40,6 +40,7 @@ import createMerchBlock from './rules/merchBlock.js';
 import createAsideBlocks from './rules/aside.js';
 import createCarouselBlocks from './rules/carousel.js';
 import createCardsBlock from './rules/cards.js';
+import createFaasBlocks from './rules/faas.js';
 import longText from './rules/longText.js';
 // import tabsToBlocks from './rules/tabs.js';
 // import guessColumnsBlocks from './rules/columns.js';
@@ -137,8 +138,9 @@ export default {
       missing script table
     */
     const missingScriptTable = (blockName, block, doc) => {
-      const cells = [[`${blockName}?`], [block.textContent]];
+      const cells = [[`${blockName}?`], [block.cloneNode(true)]];
       const table = WebImporter.DOMUtils.createTable(cells, doc);
+      table.classList.add('import-table');
       return table;
     };
 
@@ -161,12 +163,10 @@ export default {
       const block = body.querySelectorAll('div')[divOffset + offsetDiff];
       switch (blockName) {
         case constants.marquee:
+          createMarqueeBlocks(block, document);
+          break;
         case constants.zpattern:
-          if (block.querySelector('h1')) {
-            createMarqueeBlocks(block, document);
-          } else {
-            createZPatternBlock(block, document);
-          }
+          createZPatternBlock(block, document);
           break;
         case constants.iconblock:
           createIconBlock(block, document);
@@ -192,6 +192,9 @@ export default {
         case constants.cards:
           createCardsBlock(block, document);
           break;
+        case constants.faas:
+          createFaasBlocks(block, document);
+          break;
         case constants.longText:
           longText(block, document);
           break;
@@ -207,7 +210,6 @@ export default {
       const divOffset = parseInt(id.split('-').pop(), 10);
       createBlocks(name, divOffset);
     });
-
     return body;
   },
 };

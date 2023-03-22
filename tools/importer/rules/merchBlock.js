@@ -13,36 +13,58 @@ export default function createMerchBlock(block, document) {
     return keep;
   });
 
+  const textBlock = (column) => {
+    const cells = [['text(full-width)']];
+    const paraFragment = document.createDocumentFragment();
+    [...column.querySelectorAll('.cmp-text p,h2,h3')].forEach((element) => {
+      paraFragment.append(element);
+    });
+    cells.push([paraFragment]);
+    const table = WebImporter.DOMUtils.createTable(cells, document);
+    table.classList.add('import-table');
+    column.replaceWith(table);
+  };
+
+  const titleBlock = (column) => {
+    const cells = [['text(full-width)']];
+    const paraFragment = document.createDocumentFragment();
+    [...column.querySelectorAll('.cmp-title p,h2')].forEach((element) => {
+      paraFragment.append(element);
+    });
+    cells.push([paraFragment]);
+    const table = WebImporter.DOMUtils.createTable(cells, document);
+    table.classList.add('import-table');
+    column.replaceWith(table);
+  };
+
+  const flexBlock = (column) => {
+    const items = [
+      ...column.querySelector('.dexter-FlexContainer-Items').children,
+    ];
+    items.forEach((item) => {
+      const cardCells = [['Card (Product Card, border)']];
+      cardCells.push([item.innerHTML]);
+      const table = WebImporter.DOMUtils.createTable(cardCells, document);
+      table.classList.add('import-table');
+      item.replaceWith(table);
+    });
+  };
+
   containers.forEach((container) => {
     const columns = [...container.children];
-    if (columns.length > 0 && columns[0].classList.contains('title')) {
-      const cells = [['text(full-width)']];
-      cells.push([columns[0].querySelector('h2')]);
-      const table = WebImporter.DOMUtils.createTable(cells, document);
-      table.classList.add('import-table');
-      columns[0].replaceWith(table);
-    }
+    columns.forEach((column) => {
+      if (column.classList.contains('text') || column.classList.contains('xfreference')) {
+        textBlock(column);
+      }
 
-    if (columns.length > 0 && columns[1].classList.contains('flex')) {
-      const items = [
-        ...columns[1].querySelector('.dexter-FlexContainer-Items').children,
-      ];
-      items.forEach((item) => {
-        const cardCells = [['Card (Product Card, border)']];
-        cardCells.push([item.innerHTML]);
-        const table = WebImporter.DOMUtils.createTable(cardCells, document);
-        table.classList.add('import-table');
-        item.replaceWith(table);
-      });
-    }
+      if (column.classList.contains('title')) {
+        titleBlock(column);
+      }
 
-    if (columns.length > 0 && columns[2].classList.contains('text')) {
-      const cells = [['text(full-width)']];
-      cells.push([columns[2].querySelector('p')]);
-      const table = WebImporter.DOMUtils.createTable(cells, document);
-      table.classList.add('import-table');
-      columns[2].replaceWith(table);
-    }
+      if (column.classList.contains('flex')) {
+        flexBlock(column);
+      }
+    });
   });
   const sectionCells = [['Section metadata'], ['style', 'dark, xl spacing, 4-up']];
   const sectionTable = WebImporter.DOMUtils.createTable(sectionCells, document);

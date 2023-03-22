@@ -9,6 +9,7 @@ export default {
   spacer: 'spacer',
   text: 'text',
   cards: 'cards',
+  faas: 'form',
   carousel: 'carousel',
   longText: 'longtext',
 };
