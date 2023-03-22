@@ -38,6 +38,7 @@ import createZPatternBlock from './rules/zPattern.js';
 import createMasonryBlock from './rules/masonry.js';
 import createMerchBlock from './rules/merchBlock.js';
 import createAsideBlocks from './rules/aside.js';
+import createCarouselBlocks from './rules/carousel.js';
 import createCardsBlock from './rules/cards.js';
 import longText from './rules/longText.js';
 // import tabsToBlocks from './rules/tabs.js';
@@ -60,6 +61,10 @@ export default {
     params,
   }) => {
     const { body } = document;
+    const ele = body.querySelectorAll('p');
+    ele.forEach((node) => {
+      node.innerHTML = node.innerHTML.replace(/&nbsp;/g, ' ');
+    });
 
     /*
       clean
@@ -122,7 +127,7 @@ export default {
   }) => {
     const { body } = document;
 
-    body.querySelectorAll('s').forEach((s) => {
+    body.querySelectorAll('s,u').forEach((s) => {
       const span = document.createElement('span');
       span.innerHTML = s.innerHTML;
       s.replaceWith(span);
@@ -155,7 +160,6 @@ export default {
       const offsetDiff = findOffsetDiff();
       const block = body.querySelectorAll('div')[divOffset + offsetDiff];
       switch (blockName) {
-
         case constants.marquee:
         case constants.zpattern:
           if (block.querySelector('h1')) {
@@ -182,8 +186,12 @@ export default {
         case constants.spacer:
           block.remove();
           break;
+        case constants.carousel:
+          createCarouselBlocks(blockName, block, document);
+          break;
         case constants.cards:
           createCardsBlock(block, document);
+          break;
         case constants.longText:
           longText(block, document);
           break;
