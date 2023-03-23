@@ -41,6 +41,7 @@ import createAsideBlocks from './rules/aside.js';
 import createCarouselBlocks from './rules/carousel.js';
 import createCardsBlock from './rules/cards.js';
 import longText from './rules/longText.js';
+import createGradientLineBlock from './rules/gradientLine.js';
 // import tabsToBlocks from './rules/tabs.js';
 // import guessColumnsBlocks from './rules/columns.js';
 
@@ -194,6 +195,9 @@ export default {
           break;
         case constants.longText:
           longText(block, document);
+          break;
+        case constants.gradientLine:
+          createGradientLineBlock(block, document);
           break;
         default:
           // default
