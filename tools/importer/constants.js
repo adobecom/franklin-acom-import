@@ -11,4 +11,5 @@ export default {
   cards: 'cards',
   carousel: 'carousel',
   longText: 'longtext',
+  gradientLine: 'gradientline',
 };
