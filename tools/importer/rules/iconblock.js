@@ -18,9 +18,8 @@ const creativityForAllIconBlock = (block, document) => {
     } else {
       imageSrc = imageElement.getAttribute('src');
     }
-    const imageLink = document.createElement('a');
-    imageLink.innerHTML = imageSrc;
-    imageLink.setAttribute('href', imageSrc);
+    const imageLink = document.createElement('img');
+    imageLink.setAttribute('src', imageSrc);
 
     // find title content
     let titleElement = creativityContent.querySelector('.title h2');
@@ -50,6 +49,36 @@ const creativityForAllIconBlock = (block, document) => {
       contentCell.appendChild(linkElement);
       const cells = [['icon-block (fullwidth, large)'], [contentCell]];
 
+      // icon block table
+      const table = WebImporter.DOMUtils.createTable(cells, document);
+      table.classList.add('import-table');
+      block.before(document.createElement('hr'));
+      const sectionMetadataCells = [
+        ['Section Metadata'],
+        ['style', 'xxxl spacing'],
+      ];
+      // section metadata Table
+      const sectionMetaDataTable = WebImporter.DOMUtils.createTable(
+        sectionMetadataCells,
+        document,
+      );
+      sectionMetaDataTable.classList.add('import-table');
+      block.replaceWith(table, sectionMetaDataTable);
+    } else {
+      const contentCell = document.createElement('div');
+      if (imageLink) {
+        contentCell.appendChild(imageLink);
+      }
+      if (titleElement) {
+        contentCell.appendChild(titleElement);
+      }
+      descriptionElement.forEach((element) => {
+        contentCell.appendChild(element);
+      });
+      if (linkElement) {
+        contentCell.appendChild(linkElement);
+      }
+      const cells = [['icon-block (fullwidth, large)'], [contentCell]];
       // icon block table
       const table = WebImporter.DOMUtils.createTable(cells, document);
       table.classList.add('import-table');
@@ -109,12 +138,29 @@ const creativityForAllIconBlock = (block, document) => {
     return testChildOrder;
   };
 
+  const checkPattern4 = (container) => {
+    const creativityContent = container.querySelector(
+      '.position .dexter-Position > div',
+    );
+    const childCountValidation = creativityContent.childElementCount === 3;
+    const childElements = ['image', 'text', 'text'];
+    let testChildOrder = true;
+    if (childCountValidation) {
+      childElements.forEach((element, index) => {
+        if (!creativityContent.children[index].classList.contains(element)) {
+          testChildOrder = false;
+        }
+      });
+    }
+    return childCountValidation && testChildOrder;
+  };
+
   const containers = [];
   [...block.querySelectorAll('.dexter-FlexContainer-Items')].forEach(
     (c) => {
       const order1 = c.childElementCount === 1
       && hasClass(c.children[0], 'position')
-      && checkPattern1(c);
+      && (checkPattern1(c) || checkPattern4(c));
       const order2 = c.childElementCount === 4
       && hasClass(c.children[0], 'image')
       && hasClass(c.children[0], 'parbase')
