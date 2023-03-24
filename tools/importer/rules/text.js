@@ -10,10 +10,15 @@ export default function createTextBlock(block, document) {
     .querySelector('div[style]')
     ?.getAttribute('style')
     .split('"')[1];
+  let bgImageElement = null;
+  if (bgImage) {
+    bgImageElement = document.createElement('img');
+    bgImageElement.src = bgImage;
+  }
   const bgcolor = block
     .querySelector('div[data-bgcolor]')
     ?.getAttribute('data-bgcolor');
-  const background = bgImage || bgcolor || '';
+  const background = bgImageElement || bgcolor || '';
   const sectionMetadataCells = [['Section Metadata'], ['style', 'xl spacing']];
 
   if (background) {
@@ -21,7 +26,7 @@ export default function createTextBlock(block, document) {
   }
   const sectionMetaDataTable = WebImporter.DOMUtils.createTable(
     sectionMetadataCells,
-    document,
+    document
   );
   sectionMetaDataTable.classList.add('import-table');
   block.before(document.createElement('hr'));

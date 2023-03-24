@@ -3,8 +3,9 @@ export default function createFaasBlocks(block, document) {
   const cells = [['columns']];
 
   // faas link
+  const faasConfig = block.querySelector('.faas-form-settings').innerHTML;
   const faasLink = document.createElement('a');
-  faasLink.href = `https://milo.adobe.com/tools/faas#${btoa(block.innerHTML)}`;
+  faasLink.href = `https://milo.adobe.com/tools/faas#${btoa(faasConfig)}`;
   faasLink.innerHTML = 'Form as a service';
 
   // table creation
