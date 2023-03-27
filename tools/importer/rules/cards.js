@@ -1,6 +1,6 @@
 /* global WebImporter */
 const createTextBlock = (textElement, document) => {
-  const title = textElement.querySelector('.title h2');
+  const title = textElement.querySelector('h2');
   const cells = [['text(full-width)']];
   const cellContent = document.createElement('div');
   if (title) {
@@ -32,6 +32,17 @@ const setCardType = (cardsLength) => {
     cardType = '2-up';
   }
   return cardType;
+};
+
+const attachBackgroundImage = (section, document) => {
+  const tags = [...section.querySelectorAll('div[style]')];
+  tags.forEach((tag) => {
+    const url = tag.getAttribute('style').split('"')[1];
+    const imageLink = document.createElement('a');
+    imageLink.innerHTML = url;
+    imageLink.href = url;
+    tag.insertAdjacentElement('afterend', imageLink);
+  });
 };
 
 export default function createCardsBlock(block, document) {
@@ -70,13 +81,16 @@ export default function createCardsBlock(block, document) {
     containers.forEach((container) => {
       const columns = [...container.children];
       if (columns.length === 0) return;
-      if (columns.length > 0 && columns[0].classList.contains('title')) {
-        createTextBlock(container, document);
-      } else if (columns.length > 1) {
+      if (columns.length > 0 && columns[0].classList.contains('text')) {
+        createTextBlock(columns[0], document);
+        columns.shift();
+      }
+      if (columns.length > 1) {
         cardType = setCardType(columns.length);
         columns.forEach((col) => {
           const cells = [['Card']];
           const row = [];
+          attachBackgroundImage(col, document);
           row.push(col.innerHTML);
           cells.push(row);
           const table = WebImporter.DOMUtils.createTable(cells, document);
