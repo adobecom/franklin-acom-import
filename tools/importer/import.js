@@ -113,7 +113,6 @@ export default {
       const currentOffset = parseInt(id.split('-').pop(), 10);
       latestOffset = latestOffset + offsetDiff + currentOffset - prevOffset;
       const block = body.querySelectorAll('div')[latestOffset];
-      debugger;
       block.setAttribute('data-height', block.clientHeight);
       prevOffset = currentOffset;
       offsetDiff = block.querySelectorAll('div').length + 1;
