@@ -44,6 +44,8 @@ import createFaasBlocks from './rules/faas.js';
 import longText from './rules/longText.js';
 import createTextBlock from './rules/text.js';
 import createGradientLineBlock from './rules/gradientLine.js';
+import iconblock from './rules/iconblock.js';
+import iconLibrary from './rules/iconLibrary.js';
 // import tabsToBlocks from './rules/tabs.js';
 // import guessColumnsBlocks from './rules/columns.js';
 
@@ -111,11 +113,12 @@ export default {
       const currentOffset = parseInt(id.split('-').pop(), 10);
       latestOffset = latestOffset + offsetDiff + currentOffset - prevOffset;
       const block = body.querySelectorAll('div')[latestOffset];
+      debugger;
       block.setAttribute('data-height', block.clientHeight);
       prevOffset = currentOffset;
       offsetDiff = block.querySelectorAll('div').length + 1;
     });
-
+  
     params.allBlocks = allBlockIds.map((id) => ({
       id,
       name: pageBlocks[id],
@@ -163,7 +166,9 @@ export default {
     const createBlocks = (blockName, divOffset) => {
       const offsetDiff = findOffsetDiff();
       const block = body.querySelectorAll('div')[divOffset + offsetDiff];
+    
       switch (blockName) {
+        
         case constants.marquee:
           createMarqueeBlocks(block, document);
           break;
@@ -206,13 +211,18 @@ export default {
         case constants.gradientLine:
           createGradientLineBlock(block, document);
           break;
+          case constants.gradientLine:
+            iconblock(block, document);
+            break;
+            case constants.iconLibrary:
+              iconLibrary(block, document);
+            break;
         default:
-          // default
+          // defaulticonblock
           block.before(document.createElement('hr'));
           block.replaceWith(missingScriptTable(blockName, block, document));
       }
     };
-
     allBlocks.forEach((block) => {
       const { id, name } = block;
       const divOffset = parseInt(id.split('-').pop(), 10);
