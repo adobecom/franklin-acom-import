@@ -117,7 +117,6 @@ export default {
       prevOffset = currentOffset;
       offsetDiff = block.querySelectorAll('div').length + 1;
     });
-  
     params.allBlocks = allBlockIds.map((id) => ({
       id,
       name: pageBlocks[id],
@@ -165,9 +164,7 @@ export default {
     const createBlocks = (blockName, divOffset) => {
       const offsetDiff = findOffsetDiff();
       const block = body.querySelectorAll('div')[divOffset + offsetDiff];
-    
       switch (blockName) {
-        
         case constants.marquee:
           createMarqueeBlocks(block, document);
           break;
@@ -210,14 +207,14 @@ export default {
         case constants.gradientLine:
           createGradientLineBlock(block, document);
           break;
-          case constants.gradientLine:
-            iconblock(block, document);
-            break;
-            case constants.iconLibrary:
-              iconLibrary(block, document);
-            break;
+        case constants.gradientLine:
+          iconblock(block, document);
+          break;
+        case constants.iconLibrary:
+          iconLibrary(block, document);
+          break;
         default:
-          // defaulticonblock
+          // default
           block.before(document.createElement('hr'));
           block.replaceWith(missingScriptTable(blockName, block, document));
       }
