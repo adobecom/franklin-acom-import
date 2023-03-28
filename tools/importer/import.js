@@ -44,7 +44,7 @@ import createFaasBlocks from './rules/faas.js';
 import longText from './rules/longText.js';
 import createTextBlock from './rules/text.js';
 import createGradientLineBlock from './rules/gradientLine.js';
-import iconLibrary from './rules/iconLibrary.js';
+import createIconLibraryBlocks from './rules/iconLibrary.js';
 // import tabsToBlocks from './rules/tabs.js';
 // import guessColumnsBlocks from './rules/columns.js';
 
@@ -207,7 +207,7 @@ export default {
           createGradientLineBlock(block, document);
           break;
         case constants.iconLibrary:
-          iconLibrary(block, document);
+          createIconLibraryBlocks(block, document);
           break;
         default:
           // default

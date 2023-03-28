@@ -1,6 +1,7 @@
-export default function iconLibrary(block, document) { 
-  let heading = block.querySelector('.title h3');
-  let para = block.querySelector('.text p');
+/* global WebImporter */
+export default function createIconLibraryBlocks(block, document) {
+  const heading = block.querySelector('.title h3');
+  const para = block.querySelector('.text p');
   const newDiv = document.createElement('div');
   if (heading) {
     newDiv.appendChild(heading);
@@ -12,13 +13,13 @@ export default function iconLibrary(block, document) {
 
   const table = WebImporter.DOMUtils.createTable(cells, document);
   table.classList.add('import-table');
-  let allNodesCards = [...block.querySelectorAll('.dexter-FlexContainer-Items .flex .flex')];
+  const allNodesCards = [...block.querySelectorAll('.dexter-FlexContainer-Items .flex .flex')];
   allNodesCards.forEach((container) => {
-    const cells = [['card-horizontal']];
+    const cardCells = [['card-horizontal']];
     const row = [];
     row.push(container.cloneNode(true));
-    cells.push(row);
-    const cardsTable = WebImporter.DOMUtils.createTable(cells, document);
+    cardCells.push(row);
+    const cardsTable = WebImporter.DOMUtils.createTable(cardCells, document);
     cardsTable.classList.add('import-table');
     container.replaceWith(cardsTable);
   });
@@ -35,5 +36,4 @@ export default function iconLibrary(block, document) {
   sectionMetaDataTable.classList.add('import-table');
   block.before(document.createElement('hr'));
   block.replaceWith(table, ...block.querySelectorAll('.import-table'), sectionMetaDataTable);
-
 }
