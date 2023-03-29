@@ -10,7 +10,6 @@ export default function createIconLibraryBlocks(block, document) {
     newDiv.appendChild(para);
   }
   const cells = [['text(full-width)'], [newDiv]];
-
   const table = WebImporter.DOMUtils.createTable(cells, document);
   table.classList.add('import-table');
   const allNodesCards = [...block.querySelectorAll('.dexter-FlexContainer-Items .flex .flex')];
