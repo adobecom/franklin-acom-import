@@ -13,4 +13,5 @@ export default {
   carousel: 'carousel',
   longText: 'longtext',
   gradientLine: 'gradientline',
+  iconLibrary: 'iconlibrary',
 };

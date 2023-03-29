@@ -44,6 +44,7 @@ import createFaasBlocks from './rules/faas.js';
 import longText from './rules/longText.js';
 import createTextBlock from './rules/text.js';
 import createGradientLineBlock from './rules/gradientLine.js';
+import createIconLibraryBlocks from './rules/iconLibrary.js';
 // import tabsToBlocks from './rules/tabs.js';
 // import guessColumnsBlocks from './rules/columns.js';
 
@@ -115,7 +116,6 @@ export default {
       prevOffset = currentOffset;
       offsetDiff = block.querySelectorAll('div').length + 1;
     });
-
     params.allBlocks = allBlockIds.map((id) => ({
       id,
       name: pageBlocks[id],
@@ -206,13 +206,15 @@ export default {
         case constants.gradientLine:
           createGradientLineBlock(block, document);
           break;
+        case constants.iconLibrary:
+          createIconLibraryBlocks(block, document);
+          break;
         default:
           // default
           block.before(document.createElement('hr'));
           block.replaceWith(missingScriptTable(blockName, block, document));
       }
     };
-
     allBlocks.forEach((block) => {
       const { id, name } = block;
       const divOffset = parseInt(id.split('-').pop(), 10);
