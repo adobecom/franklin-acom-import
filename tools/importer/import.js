@@ -29,24 +29,9 @@ import getBlocks from './services/getBlocks.js';
 import rgbToHex from './utils.js';
 
 /*
-  import rules
+  function to import rules
 */
-import createAccordionBlocks from './rules/accordion.js';
-import createMarqueeBlocks from './rules/marquee.js';
-import createIconBlock from './rules/iconblock.js';
-import createZPatternBlock from './rules/zPattern.js';
-import createMasonryBlock from './rules/masonry.js';
-import createMerchBlock from './rules/merchBlock.js';
-import createAsideBlocks from './rules/aside.js';
-import createCarouselBlocks from './rules/carousel.js';
-import createCardsBlock from './rules/cards.js';
-import createFaasBlocks from './rules/faas.js';
-import longText from './rules/longText.js';
-import createTextBlock from './rules/text.js';
-import createGradientLineBlock from './rules/gradientLine.js';
-import createIconLibraryBlocks from './rules/iconLibrary.js';
-// import tabsToBlocks from './rules/tabs.js';
-// import guessColumnsBlocks from './rules/columns.js';
+import fetchBlockScript from './fetchBlockScript.js';
 
 export default {
   /**
@@ -128,6 +113,24 @@ export default {
     html,
     params,
   }) => {
+    /** Rules */
+    const {
+      createAccordionBlocks,
+      createMarqueeBlocks,
+      createIconBlock,
+      createZPatternBlock,
+      createMasonryBlock,
+      createMerchBlock,
+      createAsideBlocks,
+      createCarouselBlocks,
+      createCardsBlock,
+      createFaasBlocks,
+      longText,
+      createTextBlock,
+      createGradientLineBlock,
+      createIconLibraryBlocks,
+    } = fetchBlockScript(params.originalURL);
+
     const { body } = document;
 
     body.querySelectorAll('s,u').forEach((s) => {
