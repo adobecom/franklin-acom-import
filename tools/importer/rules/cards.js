@@ -46,7 +46,7 @@ const attachBackgroundImage = (section, document) => {
 };
 
 export default function createCardsBlock(block, document, cardConfig = {}) {
-  const { isCardBlockNested = false, additionalSection } = cardConfig;
+  const { isCardBlockNested = false, additionalSection = [] } = cardConfig;
   const cass = block.querySelector('.consonantcardcollection');
   if (cass) {
     const cells = [['Columns']];
