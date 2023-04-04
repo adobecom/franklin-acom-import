@@ -1,11 +1,12 @@
 import { compose } from '../utils.js';
 import createCardsBlock from './cards.js';
-import createIconLibraryBlocks from './iconLibrary.js';
+import createMediaBlock from './mediaBlock.js';
 
 const CONTENT_TYPES_TABS = {
   card: { type: 'card', class: 'toggle-Card-TabList' },
-  appFilters: { type: 'appFilters', class: 'toggle-CCAppFilters' },
-  navList: { class: 'toggle-Nav-List', type: 'navList' },
+  appFilters: { type: 'iconLibrary', class: 'toggle-CCAppFilters' },
+  navList: { class: 'toggle-Nav-List', type: 'iconLibrary' },
+  tabList: { class: 'toggle-Tab-List', type: 'mediaBlock' },
   default: { type: 'default', class: '' },
 };
 
@@ -21,31 +22,72 @@ const getContentTypeForTabs = (block) => {
   if (block.querySelector('.toggle-Nav-List')) {
     return CONTENT_TYPES_TABS.navList;
   }
+  if (block.querySelector('.toggle-Tab-List')) {
+    return CONTENT_TYPES_TABS.tabList;
+  }
   return CONTENT_TYPES_TABS.default;
 };
 
-// Need to check for which container has items
+const makeIconLibrary = (block, document) => {
+  const allNodesCards = [
+    ...block.querySelectorAll('.dexter-FlexContainer-Items .flex'),
+  ];
+  allNodesCards.forEach((container) => {
+    const cardCells = [['card-horizontal']];
+    const row = [];
+    row.push(container.cloneNode(true));
+    cardCells.push(row);
+    const cardsTable = window.WebImporter.DOMUtils.createTable(
+      cardCells,
+      document,
+    );
+    cardsTable.classList.add('import-table');
+    container.replaceWith(cardsTable);
+  });
+
+  const sectionMetadataCells = [
+    ['Section Metadata'],
+    ['style', 'three-up,xxl spacing'],
+  ];
+  const sectionMetaDataTable = window.WebImporter.DOMUtils.createTable(
+    sectionMetadataCells,
+    document,
+  );
+  sectionMetaDataTable.classList.add('import-table');
+  block.before(document.createElement('hr'));
+  block.replaceWith(
+    ...block.querySelectorAll('.import-table'),
+    sectionMetaDataTable,
+  );
+};
+
 const makeContentBlock = (node, type, document) => {
   const elements = [];
-  // const contentBlock = node.querySelectorAll('.container > .flex')[1];
   const contentBlock = node.querySelector('.dexter-FlexContainer-Items');
-  const parent = contentBlock.parentElement;
-  switch (type) {
-    case CONTENT_TYPES_TABS.card.type: {
-      createCardsBlock(contentBlock, document, true);
-      break;
+
+  if (contentBlock) {
+    const parent = contentBlock.parentElement;
+    switch (type) {
+      case CONTENT_TYPES_TABS.card.type: {
+        createCardsBlock(contentBlock, document, true);
+        break;
+      }
+      case CONTENT_TYPES_TABS.navList.type:
+      case CONTENT_TYPES_TABS.appFilters.type: {
+        makeIconLibrary(contentBlock, document);
+        break;
+      }
+      case CONTENT_TYPES_TABS.tabList.type: {
+        createMediaBlock(contentBlock, document);
+        break;
+      }
+      default: {
+        elements.push('Need some work');
+        break;
+      }
     }
-    case CONTENT_TYPES_TABS.navList.type:
-    case CONTENT_TYPES_TABS.appFilters.type: {
-      createIconLibraryBlocks(contentBlock, document);
-      break;
-    }
-    default: {
-      elements.push('Need some work');
-      break;
-    }
+    elements.push(...parent.querySelectorAll('.import-table'));
   }
-  elements.push(...parent.querySelectorAll('.import-table'));
   return elements;
 };
 
@@ -53,6 +95,7 @@ const createTab = ({ block, document }) => {
   const detectContent = getContentTypeForTabs(block);
   if (detectContent.class) {
     const contentBlocks = block?.querySelectorAll(`.${detectContent.class}`);
+
     const elements = [];
     contentBlocks.forEach((node, index) => {
       const contentElements = makeContentBlock(
@@ -68,7 +111,9 @@ const createTab = ({ block, document }) => {
       );
       sectionTable.classList.add('import-table');
       elements.push(sectionTable);
+      elements.push(document.createElement('hr'));
     });
+
     return elements;
   }
   return [];
@@ -97,13 +142,16 @@ const createTabList = ({ block, document }) => {
         '.spectrum-Tabs-itemLabel',
       )?.textContent;
     }
+
     const tabHeading = tabNode.querySelector(
       '.spectrum-Tabs-itemLabel',
     )?.textContent;
-    const li = document.createElement('li');
-    li.textContent = tabHeading;
-    ol.appendChild(li);
-    tabs.push(tabHeading);
+    if (!tabs.includes(tabHeading)) {
+      const li = document.createElement('li');
+      li.textContent = tabHeading;
+      ol.appendChild(li);
+      tabs.push(tabHeading);
+    }
   });
   cells.push([ol]);
   cells.push(['Active tab', activeTab]);

@@ -45,7 +45,11 @@ const attachBackgroundImage = (section, document) => {
   });
 };
 
-export default function createCardsBlock(block, document, tabs) {
+export default function createCardsBlock(
+  block,
+  document,
+  isCardWithHeading = false,
+) {
   const cass = block.querySelector('.consonantcardcollection');
   if (cass) {
     const cells = [['Columns']];
@@ -60,6 +64,61 @@ export default function createCardsBlock(block, document, tabs) {
     caasTable.classList.add('import-table');
     block.before(document.createElement('hr'));
     block.replaceWith(caasTable);
+  } else if (isCardWithHeading) {
+    let cardType = '';
+    const elements = [];
+    const { children } = block;
+    const filterFlex = [...children].filter(
+      (node) => node.className === 'flex',
+    );
+    let contentBlock = '';
+    if (filterFlex.length > 1) {
+      contentBlock = children[children.length - 1].querySelector(
+        '.dexter-FlexContainer-Items',
+      );
+    } else {
+      contentBlock = block;
+    }
+
+    elements.push(contentBlock);
+
+    elements.forEach((container) => {
+      const columns = [...container.children];
+      if (columns.length === 0) return;
+      if (columns.length > 0 && columns[0].classList.contains('text')) {
+        createTextBlock(columns[0], document);
+        columns.shift();
+      }
+      if (columns.length > 1) {
+        cardType = setCardType(columns.length);
+        columns.forEach((col) => {
+          const cells = [['Card']];
+          const row = [];
+          attachBackgroundImage(col, document);
+          row.push(col.innerHTML);
+          cells.push(row);
+          const table = WebImporter.DOMUtils.createTable(cells, document);
+          table.classList.add('import-table');
+          col.replaceWith(table);
+        });
+      } else {
+        const tc = columns[0].textContent.trim();
+        if (tc !== '') {
+          container.append(document.createElement('hr'));
+        }
+      }
+    });
+    const sectionCells = [
+      ['Section metadata'],
+      ['style', `xl spacing, ${cardType}`],
+    ];
+    const sectionTable = WebImporter.DOMUtils.createTable(
+      sectionCells,
+      document,
+    );
+    sectionTable.classList.add('import-table');
+    block.before(document.createElement('hr'));
+    block.replaceWith(...block.querySelectorAll('.import-table'), sectionTable);
   } else {
     const containers = [
       ...block.querySelectorAll('.dexter-FlexContainer-Items'),
@@ -77,18 +136,8 @@ export default function createCardsBlock(block, document, tabs) {
     });
 
     let cardType = '';
-    const elements = [];
-    if (tabs) {
-      elements.push(
-        block.querySelector(
-          '.dexter-FlexContainer > .dexter-FlexContainer-Items',
-        ),
-      );
-    } else {
-      elements.push(...containers);
-    }
 
-    elements.forEach((container) => {
+    containers.forEach((container) => {
       const columns = [...container.children];
       if (columns.length === 0) return;
       if (columns.length > 0 && columns[0].classList.contains('text')) {

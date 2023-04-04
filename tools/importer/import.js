@@ -26,7 +26,7 @@ import getBlocks from './services/getBlocks.js';
 /*
   import utils
 */
-import rgbToHex from './utils.js';
+import { rgbToHex } from './utils.js';
 
 /*
   import rules
@@ -45,7 +45,7 @@ import longText from './rules/longText.js';
 import createTextBlock from './rules/text.js';
 import createGradientLineBlock from './rules/gradientLine.js';
 import createIconLibraryBlocks from './rules/iconLibrary.js';
-// import tabsToBlocks from './rules/tabs.js';
+import createTabsBlocks from './rules/tabs.js';
 // import guessColumnsBlocks from './rules/columns.js';
 
 export default {
@@ -59,10 +59,7 @@ export default {
    * @returns {HTMLElement} The root element to be transformed
    */
   preprocess: async ({
-    document,
-    url,
-    html,
-    params,
+    document, url, html, params,
   }) => {
     const { body } = document;
     const ele = body.querySelectorAll('p');
@@ -123,10 +120,7 @@ export default {
   },
 
   transformDOM: async ({
-    document,
-    url,
-    html,
-    params,
+    document, url, html, params,
   }) => {
     const { body } = document;
 
@@ -208,6 +202,9 @@ export default {
           break;
         case constants.iconLibrary:
           createIconLibraryBlocks(block, document);
+          break;
+        case constants.tabs:
+          createTabsBlocks(block, document);
           break;
         default:
           // default

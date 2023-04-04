@@ -14,4 +14,5 @@ export default {
   longText: 'longtext',
   gradientLine: 'gradientline',
   iconLibrary: 'iconlibrary',
+  tabs: 'tabs',
 };
