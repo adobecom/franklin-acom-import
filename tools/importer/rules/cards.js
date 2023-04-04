@@ -45,19 +45,18 @@ const attachBackgroundImage = (section, document) => {
   });
 };
 
-export default function createCardsBlock(block, document) {
+export default function createCardsBlock(block, document, tabs) {
   const cass = block.querySelector('.consonantcardcollection');
   if (cass) {
     const cells = [['Columns']];
-    const config = cass.querySelector('consonant-card-collection').getAttribute('data-config');
+    const config = cass
+      .querySelector('consonant-card-collection')
+      .getAttribute('data-config');
     const caasLink = document.createElement('a');
     caasLink.href = `https://milo.adobe.com/tools/caas#${btoa(config)}`;
     caasLink.innerHTML = 'Content as a service';
     cells.push([caasLink]);
-    const caasTable = WebImporter.DOMUtils.createTable(
-      cells,
-      document,
-    );
+    const caasTable = WebImporter.DOMUtils.createTable(cells, document);
     caasTable.classList.add('import-table');
     block.before(document.createElement('hr'));
     block.replaceWith(caasTable);
@@ -78,7 +77,18 @@ export default function createCardsBlock(block, document) {
     });
 
     let cardType = '';
-    containers.forEach((container) => {
+    const elements = [];
+    if (tabs) {
+      elements.push(
+        block.querySelector(
+          '.dexter-FlexContainer > .dexter-FlexContainer-Items',
+        ),
+      );
+    } else {
+      elements.push(...containers);
+    }
+
+    elements.forEach((container) => {
       const columns = [...container.children];
       if (columns.length === 0) return;
       if (columns.length > 0 && columns[0].classList.contains('text')) {
@@ -104,7 +114,10 @@ export default function createCardsBlock(block, document) {
         }
       }
     });
-    const sectionCells = [['Section metadata'], ['style', `xl spacing, ${cardType}`]];
+    const sectionCells = [
+      ['Section metadata'],
+      ['style', `xl spacing, ${cardType}`],
+    ];
     const sectionTable = WebImporter.DOMUtils.createTable(
       sectionCells,
       document,
