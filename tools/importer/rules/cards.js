@@ -45,11 +45,8 @@ const attachBackgroundImage = (section, document) => {
   });
 };
 
-export default function createCardsBlock(
-  block,
-  document,
-  isCardWithHeading = false,
-) {
+export default function createCardsBlock(block, document, cardConfig = {}) {
+  const { isCardBlockNested = false, additionalSection } = cardConfig;
   const cass = block.querySelector('.consonantcardcollection');
   if (cass) {
     const cells = [['Columns']];
@@ -64,7 +61,7 @@ export default function createCardsBlock(
     caasTable.classList.add('import-table');
     block.before(document.createElement('hr'));
     block.replaceWith(caasTable);
-  } else if (isCardWithHeading) {
+  } else if (isCardBlockNested) {
     let cardType = '';
     const elements = [];
     const { children } = block;
@@ -111,6 +108,7 @@ export default function createCardsBlock(
     const sectionCells = [
       ['Section metadata'],
       ['style', `xl spacing, ${cardType}`],
+      ...additionalSection,
     ];
     const sectionTable = WebImporter.DOMUtils.createTable(
       sectionCells,

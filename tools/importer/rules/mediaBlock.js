@@ -55,7 +55,8 @@ const makeText = (node, document) => {
   return textDiv;
 };
 
-export default function mediaBlock(block, document) {
+export default function mediaBlock(block, document, config) {
+  const { additionalSection = [] } = config;
   const cells = [['Media']];
   const { children = [] } = block;
   const elements = [...children].map((node) => {
@@ -71,6 +72,13 @@ export default function mediaBlock(block, document) {
   }
   const table = window.WebImporter.DOMUtils.createTable(cells, document);
   table.classList.add('import-table');
+
+  const sectionMetaDataCells = [['Section Metadata'], ...additionalSection];
+  const sectionTable = window.WebImporter.DOMUtils.createTable(
+    sectionMetaDataCells,
+    document,
+  );
+  sectionTable.classList.add('import-table');
   block.before(document.createElement('hr'));
-  block.replaceWith(table);
+  block.replaceWith(table, sectionTable);
 }

@@ -28,7 +28,8 @@ const getContentTypeForTabs = (block) => {
   return CONTENT_TYPES_TABS.default;
 };
 
-const makeIconLibrary = (block, document) => {
+const makeIconLibrary = (block, document, config = {}) => {
+  const { additionalSection } = config;
   const allNodesCards = [
     ...block.querySelectorAll('.dexter-FlexContainer-Items .flex'),
   ];
@@ -48,6 +49,7 @@ const makeIconLibrary = (block, document) => {
   const sectionMetadataCells = [
     ['Section Metadata'],
     ['style', 'three-up,xxl spacing'],
+    ...additionalSection,
   ];
   const sectionMetaDataTable = window.WebImporter.DOMUtils.createTable(
     sectionMetadataCells,
@@ -61,24 +63,34 @@ const makeIconLibrary = (block, document) => {
   );
 };
 
-const makeContentBlock = (node, type, document) => {
+const makeContentBlock = (node, type, document, additionalSection = []) => {
   const elements = [];
   const contentBlock = node.querySelector('.dexter-FlexContainer-Items');
+  const titleText = node.querySelector('.flex .cmp-title > h3');
+  if (titleText && type === CONTENT_TYPES_TABS.card.type) {
+    elements.push(titleText.textContent);
+  }
 
   if (contentBlock) {
     const parent = contentBlock.parentElement;
     switch (type) {
       case CONTENT_TYPES_TABS.card.type: {
-        createCardsBlock(contentBlock, document, true);
+        createCardsBlock(contentBlock, document, {
+          isCardBlockNested: true,
+          additionalSection,
+        });
         break;
       }
       case CONTENT_TYPES_TABS.navList.type:
       case CONTENT_TYPES_TABS.appFilters.type: {
-        makeIconLibrary(contentBlock, document);
+        const config = {
+          additionalSection,
+        };
+        makeIconLibrary(contentBlock, document, config);
         break;
       }
       case CONTENT_TYPES_TABS.tabList.type: {
-        createMediaBlock(contentBlock, document);
+        createMediaBlock(contentBlock, document, { additionalSection });
         break;
       }
       default: {
@@ -102,15 +114,10 @@ const createTab = ({ block, document }) => {
         node,
         detectContent.type,
         document,
+        [['tab', tabs[index]]],
       );
       elements.push(...contentElements);
-      const sectionMetaData = [['Section Metadata'], ['tab', tabs[index]]];
-      const sectionTable = window.WebImporter.DOMUtils.createTable(
-        sectionMetaData,
-        document,
-      );
-      sectionTable.classList.add('import-table');
-      elements.push(sectionTable);
+
       elements.push(document.createElement('hr'));
     });
 
