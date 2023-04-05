@@ -46,6 +46,7 @@ import createTextBlock from './rules/text.js';
 import createGradientLineBlock from './rules/gradientLine.js';
 import createIconLibraryBlocks from './rules/iconLibrary.js';
 import createTextMarquee from './rules/textMarquee.js';
+import createPlanAndPricing from './rules/planAndPricing.js';
 // import tabsToBlocks from './rules/tabs.js';
 // import guessColumnsBlocks from './rules/columns.js';
 
@@ -212,6 +213,9 @@ export default {
           break;
         case constants.iconLibrary:
           createIconLibraryBlocks(block, document);
+          break;
+        case constants.planAndPricing:
+          createPlanAndPricing(block, document);
           break;
         default:
           // default

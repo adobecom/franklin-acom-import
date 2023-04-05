@@ -15,4 +15,6 @@ export default {
   gradientLine: 'gradientline',
   iconLibrary: 'iconlibrary',
   textMarquee: 'textmarquee',
+  planAndPricing: 'planndpricing',
+  columnLibrary: 'collibrary',
 };
