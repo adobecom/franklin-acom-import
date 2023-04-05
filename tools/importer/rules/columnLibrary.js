@@ -1,43 +1,57 @@
 /* global WebImporter */
-export default function createPlanAndPricing(block, document) {
-  const allImages = [...block.querySelectorAll('.image')];
-  const allText = [...block.querySelectorAll('.text')];
-  const button = block.querySelector('.cta');
+export default function createColumnLibrary(block, document) {
+  const allTextElements = [...block.querySelectorAll('.text')];
+  const textContent = [];
+  let blockHeading = '';
+  let blockLink = '';
 
-  const tableName1 = 'columns (contained)';
-  const tableName2 = 'text (full-width)';
-  const tableName3 = 'section-metadata';
-  const cells = [[tableName1]];
-  cells.push([]);
-  cells.push([]);
-
-  allImages.forEach((image) => {
-    cells[1].push([image.cloneNode(true)]);
+  allTextElements.forEach((element) => {
+    if (element.querySelector('h2')) {
+      blockHeading = element.querySelector('h2').cloneNode(true);
+    } else if (element.querySelector('a')) {
+      blockLink = element.querySelector('a').cloneNode(true);
+    } else {
+      textContent.push(element);
+    }
   });
 
-  allText.forEach((text) => {
-    cells[2].push([text.cloneNode(true)]);
-  });
+  const tableName1 = 'text (full-width)';
+  const tableName2 = 'columns (contained)';
+  const tableName3 = 'text (full-width)';
 
-  const table1 = WebImporter.DOMUtils.createTable(cells, document);
+  const cellsHeading = [[tableName1]];
+  cellsHeading.push([[blockHeading]]);
+  const table1 = WebImporter.DOMUtils.createTable(cellsHeading, document);
   table1.classList.add('import-table');
 
-  const buttonCells = [[tableName2]];
-  const boldElement = document.createElement('b');
-  boldElement.appendChild(button);
-  buttonCells.push([[boldElement.cloneNode(true)]]);
+  const cellsContent = [[tableName2]];
+  let startIndex = 0;
+  textContent.forEach((text, index) => {
+    if (index % 3 === 0) {
+      startIndex += 1;
+    }
+    if (cellsContent.length < startIndex + 1) {
+      cellsContent.push([]);
+    }
+    cellsContent[startIndex].push([text.cloneNode(true)]);
+  });
 
-  const table2 = WebImporter.DOMUtils.createTable(buttonCells, document);
+  const table2 = WebImporter.DOMUtils.createTable(cellsContent, document);
   table2.classList.add('import-table');
 
-  const sectionCells = [[tableName3]];
-  sectionCells.push([['style'], ['dark, xl spacing']]);
-  const table3 = WebImporter.DOMUtils.createTable(sectionCells, document);
+  const cellsLink = [[tableName3]];
+  cellsLink.push([[blockLink]]);
+  const table3 = WebImporter.DOMUtils.createTable(cellsLink, document);
   table3.classList.add('import-table');
+
+  const sectionCells = [['section-metadata']];
+  sectionCells.push([['style'], ['dark, xl spacing']]);
+  const table4 = WebImporter.DOMUtils.createTable(sectionCells, document);
+  table4.classList.add('import-table');
 
   block.before(document.createElement('hr'));
   block.replaceWith(...block.querySelectorAll('.import-table'), table1);
   table1.after(table2);
   table2.after(table3);
-  block.after(document.createElement('hr'));
+  table3.after(table4);
 }

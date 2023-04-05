@@ -39,5 +39,4 @@ export default function createPlanAndPricing(block, document) {
   block.replaceWith(...block.querySelectorAll('.import-table'), table1);
   table1.after(table2);
   table2.after(table3);
-  block.after(document.createElement('hr'));
 }

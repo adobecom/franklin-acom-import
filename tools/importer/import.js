@@ -47,6 +47,10 @@ import createGradientLineBlock from './rules/gradientLine.js';
 import createIconLibraryBlocks from './rules/iconLibrary.js';
 import createTextMarquee from './rules/textMarquee.js';
 import createPlanAndPricing from './rules/planAndPricing.js';
+import createColumnLibrary from './rules/columnLibrary.js';
+import createZTileContent from './rules/zTileContent.js';
+import createPromoColumn from './rules/promoColumn.js';
+import createTable from './rules/table.js';
 // import tabsToBlocks from './rules/tabs.js';
 // import guessColumnsBlocks from './rules/columns.js';
 
@@ -216,6 +220,18 @@ export default {
           break;
         case constants.planAndPricing:
           createPlanAndPricing(block, document);
+          break;
+        case constants.columnLibrary:
+          createColumnLibrary(block, document);
+          break;
+        case constants.zTileContent:
+          createZTileContent(block, document);
+          break;
+        case constants.promoColumn:
+          createPromoColumn(block, document);
+          break;
+        case constants.table:
+          createTable(block, document);
           break;
         default:
           // default
