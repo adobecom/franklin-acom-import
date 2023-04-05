@@ -31,10 +31,8 @@ const makeImage = (node, document) => {
 
 const makeText = (node, document) => {
   const textDiv = document.createElement('div');
-  const headingText = node.querySelector('.cmp-title h3')?.textContent;
-  const mediaHeading = document.createElement('p');
-  mediaHeading.textContent = `**${headingText}**`;
-  textDiv.appendChild(mediaHeading);
+  const headingText = node.querySelector('.cmp-title h3');
+  textDiv.appendChild(headingText);
   const mediaContent = node.querySelector('.text .cmp-text');
   if (mediaContent) {
     textDiv.appendChild(mediaContent);
@@ -48,9 +46,12 @@ const makeText = (node, document) => {
     ':scope > .spectrum-Button-label',
   )?.textContent;
   if (ctaText) {
-    const ctaPara = document.createElement('p');
-    ctaPara.textContent = `_[${ctaText}](${href})_`;
-    textDiv.appendChild(ctaPara);
+    const ctaAnchor = document.createElement('a');
+    ctaAnchor.setAttribute('href', href);
+    const iCta = document.createElement('i');
+    iCta.textContent = ctaText;
+    ctaAnchor.appendChild(iCta);
+    textDiv.appendChild(ctaAnchor);
   }
   return textDiv;
 };

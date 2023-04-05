@@ -10,7 +10,7 @@ const CONTENT_TYPES_TABS = {
   default: { type: 'default', class: '' },
 };
 
-const tabs = [];
+let tabs = [];
 
 const getContentTypeForTabs = (block) => {
   if (block.querySelector('.toggle-Card-TabList')) {
@@ -130,9 +130,11 @@ const createTabList = ({ block, document }) => {
   const tabList = block.querySelectorAll(
     '.navList.nav-tabs-small.hawks-nav-list > spectrum-tablist .spectrum-Tabs-item ',
   );
+  console.log('saurabh', tabList.length);
   const conTabList = block.querySelectorAll(
     '.navList > con-tablist .spectrum-Tabs-item ',
   );
+  console.log('saurabhC', conTabList.length);
   const cells = [['Tabs']];
   const ol = document.createElement('ol');
   let activeTab = '';
@@ -170,6 +172,7 @@ const createTabList = ({ block, document }) => {
 export default function createTabsBlocks(block, document) {
   const elements = [];
   const inputParams = { block, document };
+  tabs = [];
   const elementList = compose(createTabList, createTab)(inputParams);
   elements.push(...elementList);
   block.before(document.createElement('hr'));
