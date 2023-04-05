@@ -45,6 +45,7 @@ import longText from './rules/longText.js';
 import createTextBlock from './rules/text.js';
 import createGradientLineBlock from './rules/gradientLine.js';
 import createIconLibraryBlocks from './rules/iconLibrary.js';
+import createTextMarquee from './rules/textMarquee.js';
 // import tabsToBlocks from './rules/tabs.js';
 // import guessColumnsBlocks from './rules/columns.js';
 
@@ -199,6 +200,9 @@ export default {
           break;
         case constants.longText:
           longText(block, document);
+          break;
+        case constants.textMarquee:
+          createTextMarquee(block, document);
           break;
         case constants.text:
           createTextBlock(block, document);
