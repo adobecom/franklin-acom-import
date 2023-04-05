@@ -38,9 +38,16 @@ export default function createCardsBlock(block, document) {
       if (column.classList.contains('text')) {
         column.before(document.createElement('hr'));
         createTextBlock(column, document);
-      } if (column.classList.contains('xfreference')) {
-        createIconCard(column, document);
+      }
+      if (column.classList.contains('xfreference')) {
+        if (column.querySelector('.dexter-Spacer')) {
+          column.before(document.createElement('hr'));
+          createTextBlock(column, document);
+        } else {
+          createIconCard(column, document);
+        }
       }
     });
   });
+  block.replaceWith(...block.querySelectorAll('.import-table, hr'));
 }
