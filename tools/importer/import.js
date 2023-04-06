@@ -31,28 +31,6 @@ import rgbToHex from './utils.js';
 /*
   function to import rules
 */
-import createAccordionBlocks from './rules/accordion.js';
-import createMarqueeBlocks from './rules/marquee.js';
-import createIconBlock from './rules/iconblock.js';
-import createZPatternBlock from './rules/zPattern.js';
-import createMasonryBlock from './rules/masonry.js';
-import createMerchBlock from './rules/merchBlock.js';
-import createAsideBlocks from './rules/aside.js';
-import createCarouselBlocks from './rules/carousel.js';
-import createCardsBlock from './rules/cards.js';
-import createFaasBlocks from './rules/faas.js';
-import longText from './rules/longText.js';
-import createTextBlock from './rules/text.js';
-import createGradientLineBlock from './rules/gradientLine.js';
-import createIconLibraryBlocks from './rules/iconLibrary.js';
-import createTextMarquee from './rules/textMarquee.js';
-import createPlanAndPricing from './rules/planAndPricing.js';
-import createColumnLibrary from './rules/columnLibrary.js';
-import createZTileContent from './rules/zTileContent.js';
-import createPromoColumn from './rules/promoColumn.js';
-import createTable from './rules/table.js';
-// import tabsToBlocks from './rules/tabs.js';
-// import guessColumnsBlocks from './rules/columns.js';
 import fetchBlockScript from './fetchBlockScript.js';
 
 export default {
@@ -153,6 +131,12 @@ export default {
       createTextBlock,
       createGradientLineBlock,
       createIconLibraryBlocks,
+      createTextMarquee,
+      createPlanAndPricing,
+      createColumnLibrary,
+      createZTileContent,
+      createPromoColumn,
+      createTable,
     } = fetchBlockScript(params.originalURL);
 
     const { body } = document;
