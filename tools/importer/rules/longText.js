@@ -1,6 +1,6 @@
 /* global WebImporter */
 export default function longText(block, document) {
-  const allData = [...block.querySelectorAll('.text,.image,.cta')];
+  const allData = [...block.querySelectorAll('.title,.text,.image,.cta')];
 
   allData.forEach((element) => {
     let tableName = 'text(full-width)';
