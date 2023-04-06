@@ -31,6 +31,28 @@ import rgbToHex from './utils.js';
 /*
   function to import rules
 */
+import createAccordionBlocks from './rules/accordion.js';
+import createMarqueeBlocks from './rules/marquee.js';
+import createIconBlock from './rules/iconblock.js';
+import createZPatternBlock from './rules/zPattern.js';
+import createMasonryBlock from './rules/masonry.js';
+import createMerchBlock from './rules/merchBlock.js';
+import createAsideBlocks from './rules/aside.js';
+import createCarouselBlocks from './rules/carousel.js';
+import createCardsBlock from './rules/cards.js';
+import createFaasBlocks from './rules/faas.js';
+import longText from './rules/longText.js';
+import createTextBlock from './rules/text.js';
+import createGradientLineBlock from './rules/gradientLine.js';
+import createIconLibraryBlocks from './rules/iconLibrary.js';
+import createTextMarquee from './rules/textMarquee.js';
+import createPlanAndPricing from './rules/planAndPricing.js';
+import createColumnLibrary from './rules/columnLibrary.js';
+import createZTileContent from './rules/zTileContent.js';
+import createPromoColumn from './rules/promoColumn.js';
+import createTable from './rules/table.js';
+// import tabsToBlocks from './rules/tabs.js';
+// import guessColumnsBlocks from './rules/columns.js';
 import fetchBlockScript from './fetchBlockScript.js';
 
 export default {
@@ -69,6 +91,7 @@ export default {
       '#onetrust-consent-sdk',
       // [Docx preview issue] : Image files having convertToBlob issue while converting to png.
       'img[src="/content/dam/cc/us/en/creative-cloud/cc_express_appicon_256.svg"]',
+      'img[src="/content/dam/cc/icons/adobeexpress_appicon_256.svg"]',
       'img[src="/content/dam/cc/one-console/icons_rebrand/adobeexpress.svg"]',
       'img[src="/content/dam/cct/creativecloud/business/teams/mnemonics/cc-express.svg"]',
       'img[src="/content/dam/shared/images/product-icons/svg/cc-express.svg"]',
@@ -203,6 +226,9 @@ export default {
         case constants.longText:
           longText(block, document);
           break;
+        case constants.textMarquee:
+          createTextMarquee(block, document);
+          break;
         case constants.text:
           createTextBlock(block, document);
           break;
@@ -211,6 +237,21 @@ export default {
           break;
         case constants.iconLibrary:
           createIconLibraryBlocks(block, document);
+          break;
+        case constants.planAndPricing:
+          createPlanAndPricing(block, document);
+          break;
+        case constants.columnLibrary:
+          createColumnLibrary(block, document);
+          break;
+        case constants.zTileContent:
+          createZTileContent(block, document);
+          break;
+        case constants.promoColumn:
+          createPromoColumn(block, document);
+          break;
+        case constants.table:
+          createTable(block, document);
           break;
         default:
           // default
