@@ -29,7 +29,7 @@ import getBlocks from './services/getBlocks.js';
 import rgbToHex from './utils.js';
 
 /*
-  import rules
+  function to import rules
 */
 import createAccordionBlocks from './rules/accordion.js';
 import createMarqueeBlocks from './rules/marquee.js';
@@ -53,6 +53,7 @@ import createPromoColumn from './rules/promoColumn.js';
 import createTable from './rules/table.js';
 // import tabsToBlocks from './rules/tabs.js';
 // import guessColumnsBlocks from './rules/columns.js';
+import fetchBlockScript from './fetchBlockScript.js';
 
 export default {
   /**
@@ -135,6 +136,24 @@ export default {
     html,
     params,
   }) => {
+    /** Rules */
+    const {
+      createAccordionBlocks,
+      createMarqueeBlocks,
+      createIconBlock,
+      createZPatternBlock,
+      createMasonryBlock,
+      createMerchBlock,
+      createAsideBlocks,
+      createCarouselBlocks,
+      createCardsBlock,
+      createFaasBlocks,
+      longText,
+      createTextBlock,
+      createGradientLineBlock,
+      createIconLibraryBlocks,
+    } = fetchBlockScript(params.originalURL);
+
     const { body } = document;
 
     body.querySelectorAll('s,u').forEach((s) => {
