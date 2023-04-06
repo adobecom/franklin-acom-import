@@ -95,6 +95,7 @@ export default {
       'img[src="/content/dam/cc/one-console/icons_rebrand/adobeexpress.svg"]',
       'img[src="/content/dam/cct/creativecloud/business/teams/mnemonics/cc-express.svg"]',
       'img[src="/content/dam/shared/images/product-icons/svg/cc-express.svg"]',
+      'img[src="/content/dam/cc/us/en/creativecloud/tools/discovery-hub/feature-blade-icons/CCXmneumonic.svg"]',
     ]);
 
     const main = document.querySelector('main');
