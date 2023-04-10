@@ -22,14 +22,15 @@ export default function createPlanAndPricing(block, document) {
   const table1 = WebImporter.DOMUtils.createTable(cells, document);
   table1.classList.add('import-table');
 
-  const buttonCells = [[tableName2]];
-  const boldElement = document.createElement('b');
-  boldElement.appendChild(button);
-  buttonCells.push([[boldElement.cloneNode(true)]]);
-
-  const table2 = WebImporter.DOMUtils.createTable(buttonCells, document);
-  table2.classList.add('import-table');
-
+  let table2 = null;
+  if (button) {
+    const buttonCells = [[tableName2]];
+    const boldElement = document.createElement('b');
+    boldElement.appendChild(button);
+    buttonCells.push([[boldElement.cloneNode(true)]]);
+    table2 = WebImporter.DOMUtils.createTable(buttonCells, document);
+    table2.classList.add('import-table');
+  }
   const sectionCells = [[tableName3]];
   sectionCells.push([['style'], ['dark, xl spacing']]);
   const table3 = WebImporter.DOMUtils.createTable(sectionCells, document);
@@ -37,6 +38,10 @@ export default function createPlanAndPricing(block, document) {
 
   block.before(document.createElement('hr'));
   block.replaceWith(...block.querySelectorAll('.import-table'), table1);
-  table1.after(table2);
-  table2.after(table3);
+  if (table2) {
+    table1.after(table2);
+    table2.after(table3);
+  } else {
+    table1.after(table3);
+  }
 }

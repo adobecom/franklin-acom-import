@@ -49,7 +49,7 @@ export default function createIconBlock(block, document) {
       const parentDiv = document.createElement('div');
       let columnTable = null;
       columns.forEach((column) => {
-        if (column.classList.contains('image')) {
+        if (column.classList.contains('image') && column.querySelector('img')) {
           parentDiv.appendChild(column.querySelector('img'));
         }
         if (column.classList.contains('title')) {

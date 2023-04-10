@@ -4,7 +4,10 @@ export default function createPromoColumn(block, document) {
 
   const tableName = 'columns (contained)';
   const cells = [[tableName]];
-  cells.push([elements.shift().cloneNode(true)]);
+  cells.push([[]]);
+  while (!elements[0].classList.contains('image')) {
+    cells[1][0].push(elements.shift().cloneNode(true));
+  }
   cells.push([]);
   while (elements.length > 0) {
     cells[2].push([]);
