@@ -5,10 +5,15 @@ import toolsBlockScript from './rules/creativecloud/tools/index.js';
 export default function fetchBlockScript(url) {
   let allScripts = {};
   switch (true) {
-    case url.includes('/creativecloud/'):
+    case url.includes('/file-types/'):
       allScripts = {
         ...blockScripts,
         ...fileTypesBlockScript,
+      };
+      break;
+    case url.includes('/creativecloud/'):
+      allScripts = {
+        ...blockScripts,
         ...toolsBlockScript,
       };
       break;
