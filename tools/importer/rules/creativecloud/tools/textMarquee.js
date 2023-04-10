@@ -1,6 +1,5 @@
 /* global WebImporter */
 export default function createTextMarquee(block, document) {
-
   const tableName = 'text (full-width)';
   const cells = [[tableName]];
   cells.push([[block.cloneNode(true)]]);
@@ -9,5 +8,4 @@ export default function createTextMarquee(block, document) {
 
   block.before(document.createElement('hr'));
   block.replaceWith(table);
-
 }
