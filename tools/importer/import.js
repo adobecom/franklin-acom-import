@@ -74,6 +74,7 @@ export default {
       'img[src="/content/dam/cct/creativecloud/business/teams/mnemonics/cc-express.svg"]',
       'img[src="/content/dam/shared/images/product-icons/svg/cc-express.svg"]',
       'img[src="/content/dam/cc/us/en/creativecloud/tools/discovery-hub/feature-blade-icons/CCXmneumonic.svg"]',
+      'img[src="/content/dam/shared/images/product-icons/svg/cc-express.svg"]',
     ]);
 
     const main = document.querySelector('main');
@@ -137,6 +138,7 @@ export default {
       createZTileContent,
       createPromoColumn,
       createTable,
+      createImage,
     } = fetchBlockScript(params.originalURL);
 
     const { body } = document;
@@ -237,6 +239,9 @@ export default {
           break;
         case constants.table:
           createTable(block, document);
+          break;
+        case constants.image:
+          createImage(block, document);
           break;
         default:
           // default
