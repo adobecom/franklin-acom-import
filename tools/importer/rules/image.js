@@ -1,9 +1,6 @@
 /* global WebImporter */
-export default function createTextBlock(block, document) {
-  const cells = [['text']];
-  if (block.querySelector('h1')) {
-    cells[0][0] = 'text (full-width)';
-  }
+export default function createImage(block, document) {
+  const cells = [['text(full-width)']];
   cells.push([block.cloneNode(true)]);
   const table = WebImporter.DOMUtils.createTable(cells, document);
   table.classList.add('import-table');

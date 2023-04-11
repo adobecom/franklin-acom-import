@@ -20,4 +20,5 @@ export default {
   zTileContent: 'ztilecontent',
   promoColumn: 'promocols',
   table: 'table',
+  image: 'image',
 };
