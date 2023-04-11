@@ -14,6 +14,7 @@ export default {
   longText: 'longtext',
   gradientLine: 'gradientline',
   iconLibrary: 'iconlibrary',
+  tabs: 'tabs',
   textMarquee: 'textmarquee',
   planAndPricing: 'planndpricing',
   columnLibrary: 'collibrary',

@@ -26,11 +26,12 @@ import getBlocks from './services/getBlocks.js';
 /*
   import utils
 */
-import rgbToHex from './utils.js';
+import { rgbToHex } from './utils.js';
 
 /*
   function to import rules
 */
+
 import fetchBlockScript from './fetchBlockScript.js';
 
 export default {
@@ -44,10 +45,7 @@ export default {
    * @returns {HTMLElement} The root element to be transformed
    */
   preprocess: async ({
-    document,
-    url,
-    html,
-    params,
+    document, url, html, params,
   }) => {
     const { body } = document;
     const ele = body.querySelectorAll('p');
@@ -111,10 +109,7 @@ export default {
   },
 
   transformDOM: async ({
-    document,
-    url,
-    html,
-    params,
+    document, url, html, params,
   }) => {
     /** Rules */
     const {
@@ -138,6 +133,7 @@ export default {
       createZTileContent,
       createPromoColumn,
       createTable,
+      createTabsBlocks,
       createImage,
     } = fetchBlockScript(params.originalURL);
 
@@ -224,6 +220,9 @@ export default {
           break;
         case constants.iconLibrary:
           createIconLibraryBlocks(block, document);
+          break;
+        case constants.tabs:
+          createTabsBlocks(block, document);
           break;
         case constants.planAndPricing:
           createPlanAndPricing(block, document);

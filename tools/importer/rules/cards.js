@@ -45,22 +45,78 @@ const attachBackgroundImage = (section, document) => {
   });
 };
 
-export default function createCardsBlock(block, document) {
+export default function createCardsBlock(block, document, cardConfig = {}) {
+  const { isCardBlockNested = false, additionalSection = [] } = cardConfig;
   const cass = block.querySelector('.consonantcardcollection');
   if (cass) {
     const cells = [['Columns']];
-    const config = cass.querySelector('consonant-card-collection').getAttribute('data-config');
+    const config = cass
+      .querySelector('consonant-card-collection')
+      .getAttribute('data-config');
     const caasLink = document.createElement('a');
     caasLink.href = `https://milo.adobe.com/tools/caas#${btoa(config)}`;
     caasLink.innerHTML = 'Content as a service';
     cells.push([caasLink]);
-    const caasTable = WebImporter.DOMUtils.createTable(
-      cells,
-      document,
-    );
+    const caasTable = WebImporter.DOMUtils.createTable(cells, document);
     caasTable.classList.add('import-table');
     block.before(document.createElement('hr'));
     block.replaceWith(caasTable);
+  } else if (isCardBlockNested) {
+    let cardType = '';
+    const elements = [];
+    const { children } = block;
+    const filterFlex = [...children].filter(
+      (node) => node.className === 'flex',
+    );
+    let contentBlock = '';
+    if (filterFlex.length > 1) {
+      contentBlock = children[children.length - 1].querySelector(
+        '.dexter-FlexContainer-Items',
+      );
+    } else {
+      contentBlock = block;
+    }
+
+    elements.push(contentBlock);
+
+    elements.forEach((container) => {
+      const columns = [...container.children];
+      if (columns.length === 0) return;
+      if (columns.length > 0 && columns[0].classList.contains('text')) {
+        createTextBlock(columns[0], document);
+        columns.shift();
+      }
+      if (columns.length > 1) {
+        cardType = setCardType(columns.length);
+        columns.forEach((col) => {
+          const cells = [['Card']];
+          const row = [];
+          attachBackgroundImage(col, document);
+          row.push(col.innerHTML);
+          cells.push(row);
+          const table = WebImporter.DOMUtils.createTable(cells, document);
+          table.classList.add('import-table');
+          col.replaceWith(table);
+        });
+      } else {
+        const tc = columns[0].textContent.trim();
+        if (tc !== '') {
+          container.append(document.createElement('hr'));
+        }
+      }
+    });
+    const sectionCells = [
+      ['Section metadata'],
+      ['style', `xl spacing, ${cardType}`],
+      ...additionalSection,
+    ];
+    const sectionTable = WebImporter.DOMUtils.createTable(
+      sectionCells,
+      document,
+    );
+    sectionTable.classList.add('import-table');
+    block.before(document.createElement('hr'));
+    block.replaceWith(...block.querySelectorAll('.import-table'), sectionTable);
   } else {
     const containers = [
       ...block.querySelectorAll('.dexter-FlexContainer-Items'),
@@ -78,6 +134,7 @@ export default function createCardsBlock(block, document) {
     });
 
     let cardType = '';
+
     containers.forEach((container) => {
       const columns = [...container.children];
       if (columns.length === 0) return;
@@ -123,7 +180,10 @@ export default function createCardsBlock(block, document) {
         });
       }
     });
-    const sectionCells = [['Section metadata'], ['style', `xl spacing, ${cardType}`]];
+    const sectionCells = [
+      ['Section metadata'],
+      ['style', `xl spacing, ${cardType}`],
+    ];
     const sectionTable = WebImporter.DOMUtils.createTable(
       sectionCells,
       document,

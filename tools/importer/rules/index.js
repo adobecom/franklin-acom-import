@@ -13,8 +13,8 @@ import createTextBlock from './text.js';
 import createGradientLineBlock from './gradientLine.js';
 import createIconLibraryBlocks from './iconLibrary.js';
 import createTable from './table.js';
+import createTabsBlocks from './tabs.js';
 import createImage from './image.js';
-// import tabsToBlocks from './tabs.js';
 import guessColumnsBlocks from './columns.js';
 
 export default {
@@ -34,5 +34,6 @@ export default {
   createIconLibraryBlocks,
   guessColumnsBlocks,
   createTable,
+  createTabsBlocks,
   createImage,
 };
