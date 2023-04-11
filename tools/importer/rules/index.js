@@ -18,7 +18,7 @@ import createColumnLibrary from './columnLibrary.js';
 import createZTileContent from './zTileContent.js';
 import createPromoColumn from './promoColumn.js';
 import createTable from './table.js';
-// import tabsToBlocks from './tabs.js';
+import createTabsBlocks from './tabs.js';
 import guessColumnsBlocks from './columns.js';
 
 export default {
@@ -43,4 +43,5 @@ export default {
   createZTileContent,
   createPromoColumn,
   createTable,
+  createTabsBlocks,
 };
