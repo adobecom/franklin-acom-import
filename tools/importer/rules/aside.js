@@ -5,7 +5,12 @@ export default function createAsideBlocks(block, document) {
   // background color or background image
   const bgImage = block.querySelector('div[style]')?.getAttribute('style').split('"')[1];
   const bgcolor = block.querySelector('div[data-bgcolor]')?.getAttribute('data-bgcolor');
-  cells.push([bgImage || bgcolor || ' ']);
+  let bgImageElement = null;
+  if (bgImage) {
+    bgImageElement = document.createElement('img');
+    bgImageElement.src = bgImage;
+  }
+  cells.push([bgImageElement || bgcolor || ' ']);
 
   const contentWrapper = document.createElement('div');
   // Selecting all images
@@ -20,6 +25,12 @@ export default function createAsideBlocks(block, document) {
   // Add Images
   if (imageWrapper.childElementCount) {
     contentWrapper.appendChild(imageWrapper);
+  }
+
+  // select heading
+  const title = block.querySelector('.title h2');
+  if (title) {
+    contentWrapper.appendChild(title);
   }
 
   // Selecting Text
