@@ -15,4 +15,10 @@ export default {
   gradientLine: 'gradientline',
   iconLibrary: 'iconlibrary',
   tabs: 'tabs',
+  textMarquee: 'textmarquee',
+  planAndPricing: 'planndpricing',
+  columnLibrary: 'collibrary',
+  zTileContent: 'ztilecontent',
+  promoColumn: 'promocols',
+  table: 'table',
 };
