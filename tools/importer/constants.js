@@ -14,4 +14,11 @@ export default {
   longText: 'longtext',
   gradientLine: 'gradientline',
   iconLibrary: 'iconlibrary',
+  textMarquee: 'textmarquee',
+  planAndPricing: 'planndpricing',
+  columnLibrary: 'collibrary',
+  zTileContent: 'ztilecontent',
+  promoColumn: 'promocols',
+  table: 'table',
+  image: 'image',
 };

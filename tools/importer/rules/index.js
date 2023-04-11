@@ -12,6 +12,8 @@ import longText from './longText.js';
 import createTextBlock from './text.js';
 import createGradientLineBlock from './gradientLine.js';
 import createIconLibraryBlocks from './iconLibrary.js';
+import createTable from './table.js';
+import createImage from './image.js';
 // import tabsToBlocks from './tabs.js';
 import guessColumnsBlocks from './columns.js';
 
@@ -31,4 +33,6 @@ export default {
   createGradientLineBlock,
   createIconLibraryBlocks,
   guessColumnsBlocks,
+  createTable,
+  createImage,
 };

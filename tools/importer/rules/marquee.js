@@ -18,7 +18,31 @@ const marqueeVariation = (marqueeHeight) => {
   return variation;
 };
 
+const anotherVersionMarquee = (block, document) => {
+  const parent = block.querySelector('.dexter-FlexContainer .dexter-FlexContainer-Items');
+  const children = [...parent.children];
+  const lengthCheck = children.length === 2;
+  const firstElementCheck = children[0] && children[0].classList.contains('image');
+  const secondElementCheck = children[1] && children[1].classList.contains('position');
+  const anotherVersionFlag = lengthCheck && firstElementCheck && secondElementCheck;
+  if (anotherVersionFlag) {
+    const blockHeight = parseInt(block.getAttribute('data-height'), 10);
+    const bgcolor = block.querySelector('div[data-bgcolor]')?.getAttribute('data-bgcolor');
+    const cells = [[marqueeVariation(blockHeight)]];
+    cells.push([bgcolor]);
+    cells.push([children[1], children[0]]);
+    const table = WebImporter.DOMUtils.createTable(cells, document);
+    block.before(document.createElement('hr'));
+    table.classList.add('import-table');
+    block.replaceWith(table);
+  }
+  return anotherVersionFlag;
+};
+
 export default function createMarqueeBlocks(block, document) {
+  if (anotherVersionMarquee(block, document)) {
+    return;
+  }
   const blockHeight = parseInt(block.getAttribute('data-height'), 10);
   const textElement = document.createElement('div');
 

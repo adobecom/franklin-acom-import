@@ -69,8 +69,11 @@ export default {
       '#onetrust-consent-sdk',
       // [Docx preview issue] : Image files having convertToBlob issue while converting to png.
       'img[src="/content/dam/cc/us/en/creative-cloud/cc_express_appicon_256.svg"]',
+      'img[src="/content/dam/cc/icons/adobeexpress_appicon_256.svg"]',
       'img[src="/content/dam/cc/one-console/icons_rebrand/adobeexpress.svg"]',
       'img[src="/content/dam/cct/creativecloud/business/teams/mnemonics/cc-express.svg"]',
+      'img[src="/content/dam/shared/images/product-icons/svg/cc-express.svg"]',
+      'img[src="/content/dam/cc/us/en/creativecloud/tools/discovery-hub/feature-blade-icons/CCXmneumonic.svg"]',
       'img[src="/content/dam/shared/images/product-icons/svg/cc-express.svg"]',
     ]);
 
@@ -129,6 +132,13 @@ export default {
       createTextBlock,
       createGradientLineBlock,
       createIconLibraryBlocks,
+      createTextMarquee,
+      createPlanAndPricing,
+      createColumnLibrary,
+      createZTileContent,
+      createPromoColumn,
+      createTable,
+      createImage,
     } = fetchBlockScript(params.originalURL);
 
     const { body } = document;
@@ -203,6 +213,9 @@ export default {
         case constants.longText:
           longText(block, document);
           break;
+        case constants.textMarquee:
+          createTextMarquee(block, document);
+          break;
         case constants.text:
           createTextBlock(block, document);
           break;
@@ -211,6 +224,24 @@ export default {
           break;
         case constants.iconLibrary:
           createIconLibraryBlocks(block, document);
+          break;
+        case constants.planAndPricing:
+          createPlanAndPricing(block, document);
+          break;
+        case constants.columnLibrary:
+          createColumnLibrary(block, document);
+          break;
+        case constants.zTileContent:
+          createZTileContent(block, document);
+          break;
+        case constants.promoColumn:
+          createPromoColumn(block, document);
+          break;
+        case constants.table:
+          createTable(block, document);
+          break;
+        case constants.image:
+          createImage(block, document);
           break;
         default:
           // default
