@@ -12,13 +12,9 @@ import longText from './longText.js';
 import createTextBlock from './text.js';
 import createGradientLineBlock from './gradientLine.js';
 import createIconLibraryBlocks from './iconLibrary.js';
-import createTextMarquee from './textMarquee.js';
-import createPlanAndPricing from './planAndPricing.js';
-import createColumnLibrary from './columnLibrary.js';
-import createZTileContent from './zTileContent.js';
-import createPromoColumn from './promoColumn.js';
 import createTable from './table.js';
 import createTabsBlocks from './tabs.js';
+import createImage from './image.js';
 import guessColumnsBlocks from './columns.js';
 
 export default {
@@ -37,11 +33,7 @@ export default {
   createGradientLineBlock,
   createIconLibraryBlocks,
   guessColumnsBlocks,
-  createTextMarquee,
-  createPlanAndPricing,
-  createColumnLibrary,
-  createZTileContent,
-  createPromoColumn,
   createTable,
   createTabsBlocks,
+  createImage,
 };

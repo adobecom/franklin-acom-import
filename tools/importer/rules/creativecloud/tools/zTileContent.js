@@ -36,6 +36,17 @@ export default function createZTileContent(block, document) {
   const table = WebImporter.DOMUtils.createTable(cells, document);
   table.classList.add('import-table');
 
+  const sectionMetadata = [['section-metadata']];
+  sectionMetadata.push([['style'], ['xl spacing']]);
+  const bgColor = block.querySelector('div[data-bgcolor]')?.dataset.bgcolor;
+  if (bgColor) {
+    sectionMetadata.push(['background', block.querySelector('div[data-bgcolor]')?.dataset.bgcolor]);
+  }
+  table.classList.add('import-table');
+  const sectionMetadataTable = WebImporter.DOMUtils.createTable(sectionMetadata, document);
+  sectionMetadataTable.classList.add('import-table');
+
   block.before(document.createElement('hr'));
   block.replaceWith(...block.querySelectorAll('.import-table'), table);
+  table.after(sectionMetadataTable);
 }

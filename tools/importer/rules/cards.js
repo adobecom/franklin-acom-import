@@ -1,6 +1,6 @@
 /* global WebImporter */
 const createTextBlock = (textElement, document) => {
-  const title = textElement.querySelector('h2');
+  const title = textElement.querySelector('h1,h2');
   const cells = [['text(full-width)']];
   const cellContent = document.createElement('div');
   if (title) {
@@ -141,6 +141,15 @@ export default function createCardsBlock(block, document, cardConfig = {}) {
       if (columns.length > 0 && columns[0].classList.contains('text')) {
         createTextBlock(columns[0], document);
         columns.shift();
+      } else {
+        const title = block.querySelector('.title');
+        if (title) {
+          createTextBlock(title, document);
+        }
+        const text = block.querySelector('.text');
+        if (text) {
+          createTextBlock(text, document);
+        }
       }
       if (columns.length > 1) {
         cardType = setCardType(columns.length);
@@ -155,10 +164,20 @@ export default function createCardsBlock(block, document, cardConfig = {}) {
           col.replaceWith(table);
         });
       } else {
-        const tc = columns[0].textContent.trim();
-        if (tc !== '') {
-          container.append(document.createElement('hr'));
-        }
+        const column = columns[0];
+        const allCardsWrapper = column.querySelector('.dexter-FlexContainer .dexter-FlexContainer-Items');
+        const allCards = [...allCardsWrapper.children];
+        cardType = setCardType(allCards.length);
+        allCards.forEach((col) => {
+          const cells = [['Card']];
+          const row = [];
+          attachBackgroundImage(col, document);
+          row.push(col.innerHTML);
+          cells.push(row);
+          const table = WebImporter.DOMUtils.createTable(cells, document);
+          table.classList.add('import-table');
+          col.replaceWith(table);
+        });
       }
     });
     const sectionCells = [

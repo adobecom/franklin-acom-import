@@ -45,7 +45,11 @@ export default function createColumnLibrary(block, document) {
   table3.classList.add('import-table');
 
   const sectionCells = [['section-metadata']];
-  sectionCells.push([['style'], ['dark, xl spacing']]);
+  sectionCells.push([['style'], ['xl spacing']]);
+  const bgColor = block.querySelector('div[data-bgcolor]')?.dataset.bgcolor;
+  if (bgColor) {
+    sectionCells.push(['background', block.querySelector('div[data-bgcolor]')?.dataset.bgcolor]);
+  }
   const table4 = WebImporter.DOMUtils.createTable(sectionCells, document);
   table4.classList.add('import-table');
 
