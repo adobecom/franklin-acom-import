@@ -1,4 +1,4 @@
-export default function rgbToHex(rgb) {
+function rgbToHex(rgb) {
   // Split the RGB color value into its components
   const components = rgb.match(/\d+/g);
 
@@ -13,3 +13,10 @@ export default function rgbToHex(rgb) {
 
   return hexCode;
 }
+
+const compose = (...fns) => (inputParams) => fns.reduce((acc, fn) => {
+  const result = fn(inputParams, acc);
+  return [...acc, ...result];
+}, []);
+
+export { compose, rgbToHex };

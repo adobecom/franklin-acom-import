@@ -26,20 +26,13 @@ import getBlocks from './services/getBlocks.js';
 /*
   import utils
 */
-import rgbToHex from './utils.js';
+import { rgbToHex } from './utils.js';
 
 /*
-  import rules
+  function to import rules
 */
-import createAccordionBlocks from './rules/accordion.js';
-import createMarqueeBlocks from './rules/marquee.js';
-import createIconBlock from './rules/iconblock.js';
-import createZPatternBlock from './rules/zPattern.js';
-import createMasonryBlock from './rules/masonry.js';
-import createMerchBlock from './rules/merchBlock.js';
-import createAsideBlocks from './rules/aside.js';
-// import tabsToBlocks from './rules/tabs.js';
-// import guessColumnsBlocks from './rules/columns.js';
+
+import fetchBlockScript from './fetchBlockScript.js';
 
 export default {
   /**
@@ -52,12 +45,13 @@ export default {
    * @returns {HTMLElement} The root element to be transformed
    */
   preprocess: async ({
-    document,
-    url,
-    html,
-    params,
+    document, url, html, params,
   }) => {
     const { body } = document;
+    const ele = body.querySelectorAll('p');
+    ele.forEach((node) => {
+      node.innerHTML = node.innerHTML.replace(/&nbsp;/g, ' ');
+    });
 
     /*
       clean
@@ -73,8 +67,11 @@ export default {
       '#onetrust-consent-sdk',
       // [Docx preview issue] : Image files having convertToBlob issue while converting to png.
       'img[src="/content/dam/cc/us/en/creative-cloud/cc_express_appicon_256.svg"]',
+      'img[src="/content/dam/cc/icons/adobeexpress_appicon_256.svg"]',
       'img[src="/content/dam/cc/one-console/icons_rebrand/adobeexpress.svg"]',
       'img[src="/content/dam/cct/creativecloud/business/teams/mnemonics/cc-express.svg"]',
+      'img[src="/content/dam/shared/images/product-icons/svg/cc-express.svg"]',
+      'img[src="/content/dam/cc/us/en/creativecloud/tools/discovery-hub/feature-blade-icons/CCXmneumonic.svg"]',
       'img[src="/content/dam/shared/images/product-icons/svg/cc-express.svg"]',
     ]);
 
@@ -105,7 +102,6 @@ export default {
       prevOffset = currentOffset;
       offsetDiff = block.querySelectorAll('div').length + 1;
     });
-
     params.allBlocks = allBlockIds.map((id) => ({
       id,
       name: pageBlocks[id],
@@ -113,14 +109,37 @@ export default {
   },
 
   transformDOM: async ({
-    document,
-    url,
-    html,
-    params,
+    document, url, html, params,
   }) => {
+    /** Rules */
+    const {
+      createAccordionBlocks,
+      createMarqueeBlocks,
+      createIconBlock,
+      createZPatternBlock,
+      createMasonryBlock,
+      createMerchBlock,
+      createAsideBlocks,
+      createCarouselBlocks,
+      createCardsBlock,
+      createFaasBlocks,
+      longText,
+      createTextBlock,
+      createGradientLineBlock,
+      createIconLibraryBlocks,
+      createTextMarquee,
+      createPlanAndPricing,
+      createColumnLibrary,
+      createZTileContent,
+      createPromoColumn,
+      createTable,
+      createTabsBlocks,
+      createImage,
+    } = fetchBlockScript(params.originalURL);
+
     const { body } = document;
 
-    body.querySelectorAll('s').forEach((s) => {
+    body.querySelectorAll('s,u').forEach((s) => {
       const span = document.createElement('span');
       span.innerHTML = s.innerHTML;
       s.replaceWith(span);
@@ -130,8 +149,9 @@ export default {
       missing script table
     */
     const missingScriptTable = (blockName, block, doc) => {
-      const cells = [[`${blockName}?`], [block.textContent]];
+      const cells = [[`${blockName}?`], [block.cloneNode(true)]];
       const table = WebImporter.DOMUtils.createTable(cells, doc);
+      table.classList.add('import-table');
       return table;
     };
 
@@ -154,12 +174,10 @@ export default {
       const block = body.querySelectorAll('div')[divOffset + offsetDiff];
       switch (blockName) {
         case constants.marquee:
+          createMarqueeBlocks(block, document);
+          break;
         case constants.zpattern:
-          if (block.querySelector('h1')) {
-            createMarqueeBlocks(block, document);
-          } else {
-            createZPatternBlock(block, document);
-          }
+          createZPatternBlock(block, document);
           break;
         case constants.iconblock:
           createIconBlock(block, document);
@@ -179,19 +197,62 @@ export default {
         case constants.spacer:
           block.remove();
           break;
+        case constants.carousel:
+          createCarouselBlocks(blockName, block, document);
+          break;
+        case constants.cards:
+          createCardsBlock(block, document);
+          break;
+        case constants.faas:
+          createFaasBlocks(block, document);
+          break;
+        case constants.longText:
+          longText(block, document);
+          break;
+        case constants.textMarquee:
+          createTextMarquee(block, document);
+          break;
+        case constants.text:
+          createTextBlock(block, document);
+          break;
+        case constants.gradientLine:
+          createGradientLineBlock(block, document);
+          break;
+        case constants.iconLibrary:
+          createIconLibraryBlocks(block, document);
+          break;
+        case constants.tabs:
+          createTabsBlocks(block, document);
+          break;
+        case constants.planAndPricing:
+          createPlanAndPricing(block, document);
+          break;
+        case constants.columnLibrary:
+          createColumnLibrary(block, document);
+          break;
+        case constants.zTileContent:
+          createZTileContent(block, document);
+          break;
+        case constants.promoColumn:
+          createPromoColumn(block, document);
+          break;
+        case constants.table:
+          createTable(block, document);
+          break;
+        case constants.image:
+          createImage(block, document);
+          break;
         default:
           // default
           block.before(document.createElement('hr'));
           block.replaceWith(missingScriptTable(blockName, block, document));
       }
     };
-
     allBlocks.forEach((block) => {
       const { id, name } = block;
       const divOffset = parseInt(id.split('-').pop(), 10);
       createBlocks(name, divOffset);
     });
-
     return body;
   },
 };

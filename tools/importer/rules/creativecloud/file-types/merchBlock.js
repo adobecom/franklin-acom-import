@@ -50,10 +50,20 @@ export default function createMerchBlock(block, document) {
     });
   };
 
+  const xReferenceBlock = (column) => {
+    const cardCells = [['Card (Product Card, border)']];
+    const cloneColumn = column.cloneNode(true);
+    cloneColumn.querySelector('.aem-GridColumn--default--hide').remove();
+    cardCells.push([cloneColumn]);
+    const table = WebImporter.DOMUtils.createTable(cardCells, document);
+    table.classList.add('import-table');
+    column.replaceWith(table);
+  };
+
   containers.forEach((container) => {
     const columns = [...container.children];
     columns.forEach((column) => {
-      if (column.classList.contains('text') || column.classList.contains('xfreference')) {
+      if (column.classList.contains('text')) {
         textBlock(column);
       }
 
@@ -64,9 +74,21 @@ export default function createMerchBlock(block, document) {
       if (column.classList.contains('flex')) {
         flexBlock(column);
       }
+
+      if (column.classList.contains('xfreference')) {
+        if (column.querySelector('.horizontalRule')) {
+          xReferenceBlock(column);
+        } else {
+          textBlock(column);
+        }
+      }
     });
   });
-  const sectionCells = [['Section metadata'], ['style', 'dark, xl spacing, 4-up']];
+
+  const sectionCells = [
+    ['Section metadata'],
+    ['style', 'dark, xl spacing, 4-up'],
+  ];
   const sectionTable = WebImporter.DOMUtils.createTable(sectionCells, document);
   sectionTable.classList.add('import-table');
   block.before(document.createElement('hr'));
