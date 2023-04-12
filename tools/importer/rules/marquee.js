@@ -22,7 +22,7 @@ const anotherVersionMarquee = (block, document) => {
   const parent = block.querySelector('.dexter-FlexContainer .dexter-FlexContainer-Items');
   const children = [...parent.children];
   const lengthCheck = children.length === 2;
-  const firstElementCheck = children[0] && children[0].classList.contains('image');
+  const firstElementCheck = children[0] && (children[0].classList.contains('image') || children[0].classList.contains('position'));
   const secondElementCheck = children[1] && children[1].classList.contains('position');
   const anotherVersionFlag = lengthCheck && firstElementCheck && secondElementCheck;
   if (anotherVersionFlag) {
@@ -61,7 +61,13 @@ export default function createMarqueeBlocks(block, document) {
     const bgImage = block.querySelector('div[style]');
     if (bgImage) {
       const image = bgImage?.getAttribute('style').split('"')[1];
-      cells.push([image]);
+      let imageUrl = [];
+      if (image.indexOf('http://localhost:3001') !== -1) {
+        imageUrl = image.split('http://localhost:3001');
+      }
+      const imageTag = document.createElement('img');
+      imageTag.src = imageUrl.length ? `https://www.adobe.com${imageUrl[1]}` : image;
+      cells.push([imageTag]);
     }
   }
 
