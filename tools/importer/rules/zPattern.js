@@ -93,6 +93,14 @@ export default function createZPatternBlock(block, document) {
     block.remove();
   } else {
     block.before(document.createElement('hr'));
-    block.replaceWith(...block.querySelectorAll('.import-table'));
+    let finalTable = null;
+    [...block.querySelectorAll('.import-table')].forEach((table, index) => {
+      if (index) {
+        finalTable.appendChild(table.querySelectorAll('tr')[2]);
+      } else {
+        finalTable = table;
+      }
+    });
+    block.replaceWith(finalTable);
   }
 }

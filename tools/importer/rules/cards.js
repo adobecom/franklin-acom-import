@@ -45,7 +45,64 @@ const attachBackgroundImage = (section, document) => {
   });
 };
 
+const anotherVersionCards = (block, document) => {
+  const parent = block.querySelector('.dexter-FlexContainer .dexter-FlexContainer-Items');
+  const children = [...parent.children];
+  const lengthCheck = children.length === 2;
+  const firstElementCheck = children[0] && children[0].classList.contains('position');
+  const secondElementCheck = children[1] && children[1].classList.contains('flex');
+  const anotherVersionFlag = lengthCheck && firstElementCheck && secondElementCheck;
+  if (anotherVersionFlag) {
+    const bgImage = block
+      .querySelector('div[style]')
+      ?.getAttribute('style')
+      .split('"')[1];
+    const bgcolor = block
+      .querySelector('div[data-bgcolor]')
+      ?.getAttribute('data-bgcolor');
+    let bgImageElement = null;
+    if (bgImage) {
+      bgImageElement = document.createElement('img');
+      bgImageElement.src = bgImage;
+    }
+    const cells = [['text'], [children[0]]];
+    const table = WebImporter.DOMUtils.createTable(cells, document);
+    table.classList.add('import-table');
+
+    const flexItemsParent = children[1].querySelector('.dexter-FlexContainer .dexter-FlexContainer-Items');
+    const flexItems = [...flexItemsParent.children];
+    flexItems.forEach((flex) => {
+      const cardCells = [['Card']];
+      const row = [];
+      attachBackgroundImage(flex, document);
+      row.push(flex.innerHTML);
+      cardCells.push(row);
+      const cardTable = WebImporter.DOMUtils.createTable(cardCells, document);
+      cardTable.classList.add('import-table');
+      flex.replaceWith(cardTable);
+    });
+    const sectionMetadataCells = [
+      ['Section Metadata'],
+      ['style', 'xxxl spacing'],
+    ];
+    if (bgImageElement || bgcolor) {
+      sectionMetadataCells.push(['background', bgImageElement || bgcolor]);
+    }
+    const sectionMetaDataTable = WebImporter.DOMUtils.createTable(
+      sectionMetadataCells,
+      document,
+    );
+    sectionMetaDataTable.classList.add('import-table');
+    block.before(document.createElement('hr'));
+    block.replaceWith(table, ...block.querySelectorAll('.import-table'), sectionMetaDataTable);
+  }
+  return anotherVersionFlag;
+};
+
 export default function createCardsBlock(block, document, cardConfig = {}) {
+  if (anotherVersionCards(block, document)) {
+    return;
+  }
   const { isCardBlockNested = false, additionalSection = [] } = cardConfig;
   const cass = block.querySelector('.consonantcardcollection');
   if (cass) {
@@ -180,10 +237,22 @@ export default function createCardsBlock(block, document, cardConfig = {}) {
         });
       }
     });
-    const sectionCells = [
-      ['Section metadata'],
-      ['style', `xl spacing, ${cardType}`],
-    ];
+    const sectionCells = [['Section metadata'], ['style', `xl spacing, ${cardType}`]];
+    const bgImage = block
+      .querySelector('div[style]')
+      ?.getAttribute('style')
+      .split('"')[1];
+    const bgcolor = block
+      .querySelector('div[data-bgcolor]')
+      ?.getAttribute('data-bgcolor');
+    let bgImageElement = null;
+    if (bgImage) {
+      bgImageElement = document.createElement('img');
+      bgImageElement.src = bgImage;
+    }
+    if (bgImageElement || bgcolor) {
+      sectionCells.push(['background', bgImageElement || bgcolor]);
+    }
     const sectionTable = WebImporter.DOMUtils.createTable(
       sectionCells,
       document,
