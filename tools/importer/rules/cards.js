@@ -46,10 +46,14 @@ const attachBackgroundImage = (section, document) => {
 };
 
 const anotherVersionCards = (block, document) => {
-  const parent = block.querySelector('.dexter-FlexContainer .dexter-FlexContainer-Items');
+  const parent = block.querySelector(
+    '.dexter-FlexContainer .dexter-FlexContainer-Items',
+  );
   const children = [...parent.children];
   const lengthCheck = children.length === 2;
-  const firstElementCheck = children[0] && children[0].classList.contains('position');
+  const firstElementCheck = children[0]
+    && (children[0].classList.contains('position')
+      || children[0].classList.contains('flex'));
   const secondElementCheck = children[1] && children[1].classList.contains('flex');
   const anotherVersionFlag = lengthCheck && firstElementCheck && secondElementCheck;
   if (anotherVersionFlag) {
@@ -69,7 +73,9 @@ const anotherVersionCards = (block, document) => {
     const table = WebImporter.DOMUtils.createTable(cells, document);
     table.classList.add('import-table');
 
-    const flexItemsParent = children[1].querySelector('.dexter-FlexContainer .dexter-FlexContainer-Items');
+    const flexItemsParent = children[1].querySelector(
+      '.dexter-FlexContainer .dexter-FlexContainer-Items',
+    );
     const flexItems = [...flexItemsParent.children];
     flexItems.forEach((flex) => {
       const cardCells = [['Card']];
@@ -94,7 +100,11 @@ const anotherVersionCards = (block, document) => {
     );
     sectionMetaDataTable.classList.add('import-table');
     block.before(document.createElement('hr'));
-    block.replaceWith(table, ...block.querySelectorAll('.import-table'), sectionMetaDataTable);
+    block.replaceWith(
+      table,
+      ...block.querySelectorAll('.import-table'),
+      sectionMetaDataTable,
+    );
   }
   return anotherVersionFlag;
 };
@@ -138,13 +148,16 @@ export default function createCardsBlock(block, document, cardConfig = {}) {
 
     elements.forEach((container) => {
       const columns = [...container.children];
-      if (columns.length === 0) return;
+      if (columns.length === 0) {
+        return;
+      }
       if (columns.length > 0 && columns[0].classList.contains('text')) {
         createTextBlock(columns[0], document);
         columns.shift();
       }
       if (columns.length > 1) {
         cardType = setCardType(columns.length);
+
         columns.forEach((col) => {
           const cells = [['Card']];
           const row = [];
@@ -222,7 +235,9 @@ export default function createCardsBlock(block, document, cardConfig = {}) {
         });
       } else {
         const column = columns[0];
-        const allCardsWrapper = column.querySelector('.dexter-FlexContainer .dexter-FlexContainer-Items');
+        const allCardsWrapper = column.querySelector(
+          '.dexter-FlexContainer .dexter-FlexContainer-Items',
+        );
         const allCards = [...allCardsWrapper.children];
         cardType = setCardType(allCards.length);
         allCards.forEach((col) => {
@@ -237,7 +252,10 @@ export default function createCardsBlock(block, document, cardConfig = {}) {
         });
       }
     });
-    const sectionCells = [['Section metadata'], ['style', `xl spacing, ${cardType}`]];
+    const sectionCells = [
+      ['Section metadata'],
+      ['style', `xl spacing, ${cardType}`],
+    ];
     const bgImage = block
       .querySelector('div[style]')
       ?.getAttribute('style')
