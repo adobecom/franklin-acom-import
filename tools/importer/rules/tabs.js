@@ -7,6 +7,7 @@ const CONTENT_TYPES_TABS = {
   appFilters: { type: 'iconLibrary', class: 'toggle-CCAppFilters' },
   navList: { class: 'toggle-Nav-List', type: 'iconLibrary' },
   tabList: { class: 'toggle-Tab-List', type: 'mediaBlock' },
+  photoGraphyPlans: { class: 'toggle-Photography-Plans', type: 'photo' },
   default: { type: 'default', class: '' },
 };
 
@@ -24,6 +25,9 @@ const getContentTypeForTabs = (block) => {
   }
   if (block.querySelector('.toggle-Tab-List')) {
     return CONTENT_TYPES_TABS.tabList;
+  }
+  if (block.querySelector('.toggle-Photography-Plans')) {
+    return CONTENT_TYPES_TABS.photoGraphyPlans;
   }
   return CONTENT_TYPES_TABS.default;
 };
@@ -72,10 +76,20 @@ const makeContentBlock = (node, type, document, additionalSection = []) => {
   }
 
   if (contentBlock) {
-    const parent = contentBlock.parentElement;
+    const fragment = document.createDocumentFragment();
     switch (type) {
       case CONTENT_TYPES_TABS.card.type: {
+        fragment.appendChild(contentBlock);
         createCardsBlock(contentBlock, document, {
+          isCardBlockNested: true,
+          additionalSection,
+        });
+        break;
+      }
+      case CONTENT_TYPES_TABS.photoGraphyPlans.type: {
+        const closest = node.closest('.flex');
+        fragment.appendChild(closest);
+        createCardsBlock(closest, document, {
           isCardBlockNested: true,
           additionalSection,
         });
@@ -83,6 +97,7 @@ const makeContentBlock = (node, type, document, additionalSection = []) => {
       }
       case CONTENT_TYPES_TABS.navList.type:
       case CONTENT_TYPES_TABS.appFilters.type: {
+        fragment.appendChild(contentBlock);
         const config = {
           additionalSection,
         };
@@ -90,6 +105,7 @@ const makeContentBlock = (node, type, document, additionalSection = []) => {
         break;
       }
       case CONTENT_TYPES_TABS.tabList.type: {
+        fragment.appendChild(contentBlock);
         createMediaBlock(contentBlock, document, { additionalSection });
         break;
       }
@@ -98,7 +114,7 @@ const makeContentBlock = (node, type, document, additionalSection = []) => {
         break;
       }
     }
-    elements.push(...parent.querySelectorAll('.import-table'));
+    elements.push(...fragment.querySelectorAll('.import-table'));
   }
   return elements;
 };
@@ -128,13 +144,11 @@ const createTab = ({ block, document }) => {
 
 const createTabList = ({ block, document }) => {
   const tabList = block.querySelectorAll(
-    '.navList.nav-tabs-small.hawks-nav-list > spectrum-tablist .spectrum-Tabs-item ',
+    '.navList > spectrum-tablist .spectrum-Tabs-item ',
   );
-  console.log('saurabh', tabList.length);
   const conTabList = block.querySelectorAll(
     '.navList > con-tablist .spectrum-Tabs-item ',
   );
-  console.log('saurabhC', conTabList.length);
   const cells = [['Tabs']];
   const ol = document.createElement('ol');
   let activeTab = '';
