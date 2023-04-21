@@ -1,23 +1,111 @@
-/* global WebImporter */
+// /* global WebImporter */
 
-const marqueeVariation = (marqueeHeight) => {
-  let variation = '';
+import { compose } from '../utils.js';
+
+/**
+ *
+ * @param {HTMLDivElement} block
+ * @returns {HTMLImageElement}
+ */
+function makeBGImage(block, document) {
+  const bgImage = block?.querySelector('div[style]');
+  const image = bgImage?.getAttribute('style').split('"')[1];
+  let imageUrl = [];
+  if (image.indexOf('http://localhost:3001') !== -1) {
+    imageUrl = image.split('http://localhost:3001');
+  }
+  const imageTag = document.createElement('img');
+  imageTag.src = imageUrl.length
+    ? `https://www.adobe.com${imageUrl[1]}`
+    : image;
+  return imageTag;
+}
+
+/**
+ *
+ * @param {HTMLDivElement} block
+ * @returns {string}
+ */
+function makeBGColor(block) {
+  return (
+    block.querySelector('div[data-bgcolor]')?.getAttribute('data-bgcolor')
+    ?? 'No colour'
+  );
+}
+
+/**
+ *
+ * @param {HTMLDivElement} block
+ * @returns {HTMLAnchorElement}
+ */
+function makeVideo(block) {
+  const videoWrapper = block?.querySelector('.video-Wrapper source');
+  const backgroundVideoURL = videoWrapper.getAttribute('src');
+  const a = document.createElement('a');
+  a.innerHTML = backgroundVideoURL;
+  a.setAttribute('href', backgroundVideoURL);
+  return a;
+}
+
+/**
+ * Function to evaluate type of Marquee on basis of height
+ * @param {Number} marqueeHeight
+ * @returns {String} returns the variation of marquee
+ */
+function marqueeVariation(marqueeHeight) {
   switch (marqueeHeight) {
     case 360:
-      variation = 'Marquee (small)';
-      break;
+      return 'Marquee (small)';
     case 560:
-      variation = 'Marquee';
-      break;
+      return 'Marquee';
     case 700:
-      variation = 'Marquee (large)';
-      break;
+      return 'Marquee (large)';
     default:
-      variation = 'Marqueeee';
-      break;
+      return 'Marquee';
   }
-  return variation;
-};
+}
+/**
+ *
+ * @param {{block: HTMLDivElement}} inputParams
+ * @returns {Array<string>}
+ */
+
+function createMarqueeHeader({ block }) {
+  const blockHeight = parseInt(block?.getAttribute('data-height') ?? 0, 10);
+  const marqueeHeader = marqueeVariation(blockHeight);
+  return [[marqueeHeader]];
+}
+
+/**
+ *
+ * @param {{block: HTMLDivElement}} inputParams
+ * @returns {Array<String | HTMLAnchorElement | HTMLImageElement}
+ */
+function createMarqueeBackground({ block, document }) {
+  const isVideo = !!block?.querySelector('.video-Wrapper source');
+  const isBackgroundColor = !!block?.querySelector('div[data-bgcolor]');
+  const isBgImage = !!block.querySelector('div[style]');
+  if (isVideo) {
+    const video = makeVideo(block, document);
+    return [[video]];
+  }
+  if (isBackgroundColor) {
+    const bgcolor = makeBGColor(block);
+    return [[bgcolor]];
+  }
+  if (isBgImage) {
+    const bgImage = makeBGImage(block, document);
+    return [[bgImage]];
+  }
+  return [];
+}
+
+/**
+ * Function for building Marquee,
+ * @param {HTMLDivElement} block
+ * @param {HTMLDocument} document
+ * @returns {Array<HTMLElement>} returns array of elements
+ */
 
 // for btn
 function createBtn(block, document, textElement) {
@@ -65,10 +153,6 @@ function createImage(block, document, textElement) {
   const imageQuery = parent.querySelectorAll('img');
   imageQuery.forEach((image) => {
     const imgSrc = image.getAttribute('src');
-    //   if (imgSrc && (imgSrc.indexOf('.svg') + 1)) {
-    //     if (imgSrc.indexOf('https') === -1) {
-    //       imgSrc = `https://www.adobe.com/${imgSrc}`;
-    //     }
     const imgLink = document.createElement('a');
     imgLink.innerHTML = imgSrc;
     imgLink.setAttribute('href', imgSrc);
@@ -76,14 +160,16 @@ function createImage(block, document, textElement) {
   });
 }
 
+// for video
+function createVideo(block, document, textElement) {
+  const parent = block.querySelector('.dexter-FlexContainer-Items');
+  const videoQuery = parent.querySelectorAll('iframe');
+  const videoUrl = videoQuery[0]?.getAttribute('src');
+  const videoLink = document.createElement('div');
+  videoLink.innerHTML = videoUrl;
+  textElement.appendChild(videoLink);
+}
 const oneChildMarquee = (block, document, textElement) => {
-  createBtn(block, document, textElement);
-  createHeading(block, document, textElement);
-  createContent(block, document, textElement);
-  createImage(block, document, textElement);
-};
-
-const twoChildMarquee = (block, document, textElement) => {
   createBtn(block, document, textElement);
   createHeading(block, document, textElement);
   createContent(block, document, textElement);
@@ -97,36 +183,51 @@ const threeChildMarquee = (block, document, textElement) => {
   createImage(block, document, textElement);
 };
 
-function checkChildren(block, document, textElement) {
+const twoChildMarquee = (block, document, textElement) => {
+  createBtn(block, document, textElement);
+  createHeading(block, document, textElement);
+  createContent(block, document, textElement);
+  createImage(block, document, textElement);
+  createVideo(block, document, textElement);
+};
+
+function createMarqueeDivElement(block, document, textElement) {
   const alldata = block?.querySelector('.dexter-FlexContainer-Items');
   if (alldata.children.length === 3) {
-    threeChildMarquee(block, document, textElement);
+    return threeChildMarquee(block, document, textElement);
   }
   if (alldata.children.length === 2) {
-    twoChildMarquee(block, document, textElement);
+    return twoChildMarquee(block, document, textElement);
   }
 
   if (alldata.children.length === 1) {
-    oneChildMarquee(block, document, textElement);
+    return oneChildMarquee(block, document, textElement);
   }
+  return '';
+}
+function createMarqueeData({ block, document }) {
+  const textElement = document.createElement('div');
+  createMarqueeDivElement(block, document, textElement);
+  return [[textElement]];
+}
+
+function createMarquee(block, document) {
+  const inputParams = {
+    block,
+    document,
+  };
+  const elements = compose(
+    createMarqueeHeader,
+    createMarqueeBackground,
+    createMarqueeData,
+  )(inputParams);
+  return elements;
 }
 
 export default function createMarqueeBlocks(block, document) {
-  const textElement = document.createElement('div');
-  checkChildren(block, document, textElement);
-  const blockHeight = parseInt(block.getAttribute('data-height'), 10);
-  const cells = [[marqueeVariation(blockHeight)]];
-  let videoImage = null;
-  if (block.querySelector('iframe')) {
-    videoImage = block.querySelector('iframe').src;
-  }
-  let bgcolor = null;
-  if (block.querySelector('div[data-bgcolor]')) {
-    bgcolor = block.querySelector('div[data-bgcolor]')?.getAttribute('data-bgcolor');
-  }
-  cells.push([textElement, videoImage], [bgcolor]);
-  const marqueeBlockTable = WebImporter.DOMUtils.createTable(cells, document);
+  const elements = createMarquee(block, document);
+  const table = window.WebImporter.DOMUtils.createTable(elements, document);
   block.before(document.createElement('hr'));
-  marqueeBlockTable.classList.add('import-table');
-  block.replaceWith(marqueeBlockTable);
+  table.classList.add('import-table');
+  block.replaceWith(table);
 }

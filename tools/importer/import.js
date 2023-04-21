@@ -34,7 +34,7 @@ import { rgbToHex } from './utils.js';
 
 import fetchBlockScript from './fetchBlockScript.js';
 
-import createCardsBlock from './rules/creativecloud/file-types/cards.js';
+// import createCardsBlock from './rules/creativecloud/file-types/cards.js';
 
 export default {
   /**
@@ -123,7 +123,7 @@ export default {
       createMerchBlock,
       createAsideBlocks,
       createCarouselBlocks,
-      // createCardsBlock,
+      createCardsBlock,
       createFaasBlocks,
       longText,
       createTextBlock,
@@ -255,20 +255,7 @@ export default {
       const divOffset = parseInt(id.split('-').pop(), 10);
       createBlocks(name, divOffset);
     });
-    createMarqueeBlocks(document.querySelector('#root_content_flex_copy_copy_copyu'), document);
-    // root_content_xfreference   for 1 child
-    // root_content_flex_copy_copy_copyu   for 2 child
-    // root_content_xfreference_762058753  for 3 child
-    // createZPatternBlock(document.querySelector('#root_content_xfreference_19677713'), document);
-    // createCardsBlock(document.querySelector('#root_content_flex_2083638188'), document);
-    // createTextBlock(document.querySelector('#root_content_flex_1713567263'), document);
-    // createIconBlock(document.querySelector('#root_content_xfreference_395373810'), document);
-    // content_xfreference_14869173_1099495286'), document);
-    // createMerchBlock(document.querySelector('#root_content_flex_465584926_copy'), document);
-    // createAccordionBlocks(document.querySelector('#root_content_flex'), document);
-    // createAsideBlocks(document.querySelector('#root_content_flex_2083638188'), document);
-    // longText(document.querySelector('#root_content_flex_copy_copy_copy__91363851'), document);
-    // createTabsBlocks(document.querySelector('#root_content_xfreference_673313177'), document);
+    createMarqueeBlocks((document.querySelector('#root_content_flex_copy_copy_copyu')), document);
     return body;
   },
 };
