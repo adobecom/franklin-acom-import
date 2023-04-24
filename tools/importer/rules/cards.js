@@ -53,7 +53,7 @@ const anotherVersionCards = (block, document) => {
   const lengthCheck = children.length === 2;
   const firstElementCheck = children[0]
     && (children[0].classList.contains('position')
-      || children[0].classList.contains('flex'));
+      || children[0].classList.contains('flex') || children[0].classList.contains('title'));
   const secondElementCheck = children[1] && children[1].classList.contains('flex');
   const anotherVersionFlag = lengthCheck && firstElementCheck && secondElementCheck;
   if (anotherVersionFlag) {

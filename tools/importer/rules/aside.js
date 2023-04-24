@@ -34,9 +34,11 @@ export default function createAsideBlocks(block, document) {
   }
 
   // Selecting Text
-  const text = block.querySelector('.text p');
-  if (text) {
-    contentWrapper.appendChild(text);
+  const paras = block.querySelectorAll('.text p');
+  if (paras.length) {
+    paras.forEach((para) => {
+      contentWrapper.appendChild(para);
+    });
   }
 
   // Selecting Link
