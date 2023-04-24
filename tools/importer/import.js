@@ -34,8 +34,6 @@ import { rgbToHex } from './utils.js';
 
 import fetchBlockScript from './fetchBlockScript.js';
 
-// import createCardsBlock from './rules/creativecloud/file-types/cards.js';
-
 export default {
   /**
    * Apply DOM operations to the provided document and return
@@ -245,7 +243,6 @@ export default {
           createImage(block, document);
           break;
         default:
-          // default
           block.before(document.createElement('hr'));
           block.replaceWith(missingScriptTable(blockName, block, document));
       }
@@ -255,7 +252,6 @@ export default {
       const divOffset = parseInt(id.split('-').pop(), 10);
       createBlocks(name, divOffset);
     });
-    createMarqueeBlocks((document.querySelector('#root_content_flex_copy_copy_copyu')), document);
     return body;
   },
 };

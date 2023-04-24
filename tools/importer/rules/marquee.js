@@ -100,13 +100,6 @@ function createMarqueeBackground({ block, document }) {
   return [];
 }
 
-/**
- * Function for building Marquee,
- * @param {HTMLDivElement} block
- * @param {HTMLDocument} document
- * @returns {Array<HTMLElement>} returns array of elements
- */
-
 // for btn
 function createBtn(block, document, textElement) {
   const parent = block.querySelector('.dexter-FlexContainer-Items');
@@ -211,6 +204,12 @@ function createMarqueeData({ block, document }) {
   return [[textElement]];
 }
 
+/**
+ * Function for building Marquee,
+ * @param {HTMLDivElement} block
+ * @param {HTMLDocument} document
+ * @returns {Array<HTMLElement>} returns array of elements
+ */
 function createMarquee(block, document) {
   const inputParams = {
     block,
