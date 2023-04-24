@@ -243,7 +243,6 @@ export default {
           createImage(block, document);
           break;
         default:
-          // default
           block.before(document.createElement('hr'));
           block.replaceWith(missingScriptTable(blockName, block, document));
       }
