@@ -45,7 +45,7 @@ const attachBackgroundImage = (section, document) => {
   });
 };
 
-const anotherVersionCards = (block, document) => {
+const anotherVersionCards = (block, document, additionalSection = []) => {
   const parent = block.querySelector(
     '.dexter-FlexContainer .dexter-FlexContainer-Items',
   );
@@ -90,6 +90,7 @@ const anotherVersionCards = (block, document) => {
     const sectionMetadataCells = [
       ['Section Metadata'],
       ['style', 'xxxl spacing'],
+      ...additionalSection,
     ];
     if (bgImageElement || bgcolor) {
       sectionMetadataCells.push(['background', bgImageElement || bgcolor]);
@@ -110,10 +111,10 @@ const anotherVersionCards = (block, document) => {
 };
 
 export default function createCardsBlock(block, document, cardConfig = {}) {
-  if (anotherVersionCards(block, document)) {
+  const { additionalSection = [] } = cardConfig;
+  if (anotherVersionCards(block, document, additionalSection)) {
     return;
   }
-  const { isCardBlockNested = false, additionalSection = [] } = cardConfig;
   const cass = block.querySelector('.consonantcardcollection');
   if (cass) {
     const cells = [['Columns']];
@@ -128,65 +129,6 @@ export default function createCardsBlock(block, document, cardConfig = {}) {
     caasTable.classList.add('import-table');
     block.before(document.createElement('hr'));
     block.replaceWith(caasTable);
-  } else if (isCardBlockNested) {
-    let cardType = '';
-    const elements = [];
-    const { children } = block;
-    const filterFlex = [...children].filter(
-      (node) => node.className === 'flex',
-    );
-    let contentBlock = '';
-    if (filterFlex.length > 1) {
-      contentBlock = children[children.length - 1].querySelector(
-        '.dexter-FlexContainer-Items',
-      );
-    } else {
-      contentBlock = block;
-    }
-
-    elements.push(contentBlock);
-
-    elements.forEach((container) => {
-      const columns = [...container.children];
-      if (columns.length === 0) {
-        return;
-      }
-      if (columns.length > 0 && columns[0].classList.contains('text')) {
-        createTextBlock(columns[0], document);
-        columns.shift();
-      }
-      if (columns.length > 1) {
-        cardType = setCardType(columns.length);
-
-        columns.forEach((col) => {
-          const cells = [['Card']];
-          const row = [];
-          attachBackgroundImage(col, document);
-          row.push(col.innerHTML);
-          cells.push(row);
-          const table = WebImporter.DOMUtils.createTable(cells, document);
-          table.classList.add('import-table');
-          col.replaceWith(table);
-        });
-      } else {
-        const tc = columns[0].textContent.trim();
-        if (tc !== '') {
-          container.append(document.createElement('hr'));
-        }
-      }
-    });
-    const sectionCells = [
-      ['Section metadata'],
-      ['style', `xl spacing, ${cardType}`],
-      ...additionalSection,
-    ];
-    const sectionTable = WebImporter.DOMUtils.createTable(
-      sectionCells,
-      document,
-    );
-    sectionTable.classList.add('import-table');
-    block.before(document.createElement('hr'));
-    block.replaceWith(...block.querySelectorAll('.import-table'), sectionTable);
   } else {
     const containers = [
       ...block.querySelectorAll('.dexter-FlexContainer-Items'),
@@ -255,6 +197,7 @@ export default function createCardsBlock(block, document, cardConfig = {}) {
     const sectionCells = [
       ['Section metadata'],
       ['style', `xl spacing, ${cardType}`],
+      ...additionalSection,
     ];
     const bgImage = block
       .querySelector('div[style]')
