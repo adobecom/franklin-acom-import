@@ -34,6 +34,8 @@ import { rgbToHex } from './utils.js';
 
 import fetchBlockScript from './fetchBlockScript.js';
 
+// import createCardsBlock from './rules/creativecloud/file-types/cards.js';
+
 export default {
   /**
    * Apply DOM operations to the provided document and return
@@ -135,6 +137,7 @@ export default {
       createTable,
       createTabsBlocks,
       createImage,
+      createHowTo,
     } = fetchBlockScript(params.originalURL);
 
     const { body } = document;
@@ -242,6 +245,9 @@ export default {
         case constants.image:
           createImage(block, document);
           break;
+        case constants.howTo:
+          createHowTo(block, document);
+          break;
         default:
           block.before(document.createElement('hr'));
           block.replaceWith(missingScriptTable(blockName, block, document));
@@ -252,6 +258,7 @@ export default {
       const divOffset = parseInt(id.split('-').pop(), 10);
       createBlocks(name, divOffset);
     });
+
     return body;
   },
 };
