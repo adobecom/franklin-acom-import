@@ -184,11 +184,9 @@ const createSlideBlocks = (block, document) => {
     return makeVideo({ slide: block, document });
   }
   if (block.className.includes('text')) {
-    console.log('hello: text');
     return makeText({ slide: block, document });
   }
   if (block.className.includes('cta')) {
-    console.log('hello: cta');
     return makeCTA({ slide: block, document });
   }
   const cumlativeElements = [];
