@@ -16,6 +16,7 @@ import createTable from './table.js';
 import createTabsBlocks from './tabs.js';
 import createImage from './image.js';
 import guessColumnsBlocks from './columns.js';
+import createHowTo from './howTo.js';
 
 export default {
   createAccordionBlocks,
@@ -36,4 +37,5 @@ export default {
   createTable,
   createTabsBlocks,
   createImage,
+  createHowTo,
 };

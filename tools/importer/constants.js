@@ -22,4 +22,5 @@ export default {
   promoColumn: 'promocols',
   table: 'table',
   image: 'image',
+  howTo: 'howto',
 };

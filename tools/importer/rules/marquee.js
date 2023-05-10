@@ -129,12 +129,39 @@ function createHeading(block, document, textElement) {
 // for content
 function createContent(block, document, textElement) {
   const parent = block.querySelector('.dexter-FlexContainer-Items');
-  const contentQuery = parent.querySelectorAll('p');
+  if (parent.querySelectorAll('h2')) {
+    const contentQuery = parent.querySelectorAll('h2');
+    if (contentQuery.length) {
+      [...contentQuery].forEach((para) => {
+        let marqueeContent = null;
+        marqueeContent = document.createElement('p');
+        marqueeContent.innerHTML = para.innerHTML;
+        textElement.appendChild(marqueeContent);
+      });
+    }
+  }
+  if (parent.querySelectorAll('p')) {
+    const contentQuery = parent.querySelectorAll('p');
+    if (contentQuery.length) {
+      [...contentQuery].forEach((para) => {
+        let marqueeContent = null;
+        marqueeContent = document.createElement('p');
+        marqueeContent.innerHTML = para.innerHTML;
+        textElement.appendChild(marqueeContent);
+      });
+    }
+  }
+}
+
+// for contentList
+function createContentList(block, document, textElement) {
+  const parent = block.querySelector('.dexter-FlexContainer-Items');
+  const contentQuery = parent.querySelectorAll('li');
   if (contentQuery.length) {
     [...contentQuery].forEach((para) => {
       let marqueeContent = null;
       marqueeContent = document.createElement('p');
-      marqueeContent.innerHTML = para.innerHTML;
+      marqueeContent.innerHTML = `.${para.innerHTML}`;
       textElement.appendChild(marqueeContent);
     });
   }
@@ -162,11 +189,24 @@ function createVideo(block, document, textElement) {
   videoLink.innerHTML = videoUrl;
   textElement.appendChild(videoLink);
 }
+
+// for another video
+function createVideohref(block, document, textElement) {
+  const parent = block.querySelector('.dexter-FlexContainer-Items');
+  const videoQuery = parent.getElementsByTagName('a')[0].href;
+  const videoLink = document.createElement('div');
+  videoLink.innerHTML = videoQuery;
+  textElement.appendChild(videoLink);
+}
+
 const oneChildMarquee = (block, document, textElement) => {
-  createBtn(block, document, textElement);
   createHeading(block, document, textElement);
   createContent(block, document, textElement);
   createImage(block, document, textElement);
+  createVideo(block, document, textElement);
+  createVideohref(block, document, textElement);
+  createBtn(block, document, textElement);
+  return [[textElement]];
 };
 
 const threeChildMarquee = (block, document, textElement) => {
@@ -174,14 +214,25 @@ const threeChildMarquee = (block, document, textElement) => {
   createHeading(block, document, textElement);
   createContent(block, document, textElement);
   createImage(block, document, textElement);
+  createVideo(block, document, textElement);
+  createVideohref(block, document, textElement);
+  return [[textElement]];
 };
 
-const twoChildMarquee = (block, document, textElement) => {
-  createBtn(block, document, textElement);
+const twoChildMarquee = (block) => {
+  const allData = block?.querySelector('.dexter-FlexContainer-Items');
+  const children = [...allData.children];
+  return [[children[1], children[0]]];
+};
+
+const fourChildMarquee = (block, document, textElement) => {
   createHeading(block, document, textElement);
   createContent(block, document, textElement);
   createImage(block, document, textElement);
   createVideo(block, document, textElement);
+  createContentList(block, document, textElement);
+  createBtn(block, document, textElement);
+  createVideohref(block, document, textElement);
 };
 
 function createMarqueeDivElement(block, document, textElement) {
@@ -196,12 +247,14 @@ function createMarqueeDivElement(block, document, textElement) {
   if (alldata.children.length === 1) {
     return oneChildMarquee(block, document, textElement);
   }
+  if (alldata.children.length === 4) {
+    return fourChildMarquee(block, document, textElement);
+  }
   return '';
 }
 function createMarqueeData({ block, document }) {
   const textElement = document.createElement('div');
-  createMarqueeDivElement(block, document, textElement);
-  return [[textElement]];
+  return createMarqueeDivElement(block, document, textElement);
 }
 
 /**
