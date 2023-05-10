@@ -9,6 +9,7 @@ const CONTENT_TYPES_TABS = {
   tabList: { class: 'toggle-Tab-List', type: 'mediaBlock' },
   photoGraphyPlans: { class: 'toggle-Photography-Plans', type: 'photo' },
   creativeCloudAllApps: { class: 'toggle-Creative-Cloud-All-Apps-Tab-List', type: 'card' },
+  acceleratingDemands: { class: 'toggle-Keep-up-with-accelerating-demands', type: 'mediaBlock' },
   default: { type: 'default', class: '' },
 };
 
@@ -32,6 +33,9 @@ const getContentTypeForTabs = (block) => {
   }
   if (block.querySelector('.toggle-Creative-Cloud-All-Apps-Tab-List')) {
     return CONTENT_TYPES_TABS.creativeCloudAllApps;
+  }
+  if (block.querySelector('.toggle-Keep-up-with-accelerating-demands')) {
+    return CONTENT_TYPES_TABS.acceleratingDemands;
   }
   return CONTENT_TYPES_TABS.default;
 };
@@ -100,6 +104,7 @@ const makeContentBlock = (node, type, document, additionalSection = []) => {
         makeIconLibrary(contentBlock, document, config);
         break;
       }
+      case CONTENT_TYPES_TABS.acceleratingDemands.type:
       case CONTENT_TYPES_TABS.tabList.type: {
         fragment.appendChild(contentBlock);
         createMediaBlock(contentBlock, document, { additionalSection });
