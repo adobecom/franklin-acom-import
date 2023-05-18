@@ -84,7 +84,7 @@ export default {
     elements.forEach((element) => {
       const styles = window.getComputedStyle(element);
       const colors = ['rgba(0, 0, 0, 0)', 'rgb(255, 255, 255)', 'rgb(0, 0, 0)'];
-      if (!colors.includes(styles.backgroundColor)) {
+      if (styles.backgroundColor && !colors.includes(styles.backgroundColor)) {
         element.setAttribute('data-bgcolor', rgbToHex(styles.backgroundColor));
       }
     });

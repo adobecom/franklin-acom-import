@@ -20,7 +20,7 @@ const creativityForAllIconBlock = (block, document) => {
   block.before(document.createElement('hr'));
   const sectionMetadataCells = [
     ['Section Metadata'],
-    ['style', 'xxxl spacing'],
+    ['style', 'xxxl spacing, center'],
   ];
   if (bgImageElement || bgcolor) {
     sectionMetadataCells.push(['background', bgImageElement || bgcolor]);
@@ -118,7 +118,7 @@ const expressIconBlock = (block, document) => {
   // section metadata cell creation
   const sectionMetadataCells = [
     ['Section Metadata'],
-    ['style', 'xxxl spacing'],
+    ['style', 'xxxl spacing, center'],
   ];
 
   if (bgImage) {
