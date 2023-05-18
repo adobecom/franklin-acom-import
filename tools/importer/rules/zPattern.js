@@ -2,13 +2,13 @@ const zPatternVariation = (zPatternHeight) => {
   let variation = '';
   switch (zPatternHeight) {
     case 303:
-      variation = 'zPattern (small)';
+      variation = 'z-pattern (small)';
       break;
     case 350:
-      variation = 'zPattern (large)';
+      variation = 'z-pattern (large)';
       break;
     default:
-      variation = 'zPattern';
+      variation = 'z-pattern';
       break;
   }
   return variation;

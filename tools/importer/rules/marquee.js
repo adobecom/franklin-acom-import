@@ -11,7 +11,7 @@ function makeBGImage(block, document) {
   const bgImage = block?.querySelector('div[style]');
   const image = bgImage?.getAttribute('style').split('"')[1];
   let imageUrl = [];
-  if (image.indexOf('http://localhost:3001') !== -1) {
+  if (image && image.indexOf('http://localhost:3001') !== -1) {
     imageUrl = image.split('http://localhost:3001');
   }
   const imageTag = document.createElement('img');
