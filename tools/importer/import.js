@@ -156,15 +156,12 @@ export default {
       createTable,
       createTabsBlocks,
       createImage,
-<<<<<<< HEAD
       createMarqueeSplitBlocks,
       createJumpToBlocks,
       createLongFormTextBlocks,
       createConsonantCardBlock,
-      createVideo
-=======
+      createVideo,
       createHowTo,
->>>>>>> main
     } = fetchBlockScript(params.originalURL);
 
     const { body } = document;
@@ -300,11 +297,8 @@ export default {
       const divOffset = parseInt(id.split('-').pop(), 10);
       createBlocks(name, divOffset);
     });
-<<<<<<< HEAD
     createMetadataBlock(document, cardMetadataTable);
-=======
 
->>>>>>> main
     return body;
   },
 };
