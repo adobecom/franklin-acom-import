@@ -17,6 +17,12 @@ export default function fetchBlockScript(url) {
         ...toolsBlockScript,
       };
       break;
+    case url.includes('/products/'):
+      allScripts = {
+        ...blockScripts,
+        ...toolsBlockScript,
+      };
+      break;
     default:
       allScripts = {
         ...blockScripts,

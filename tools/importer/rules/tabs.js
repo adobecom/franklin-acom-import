@@ -8,6 +8,7 @@ const CONTENT_TYPES_TABS = {
   navList: { class: 'toggle-Nav-List', type: 'iconLibrary' },
   tabList: { class: 'toggle-Tab-List', type: 'mediaBlock' },
   photoGraphyPlans: { class: 'toggle-Photography-Plans', type: 'photo' },
+  creativeCloudAllApps: { class: 'toggle-Creative-Cloud-All-Apps-Tab-List', type: 'card' },
   default: { type: 'default', class: '' },
 };
 
@@ -28,6 +29,9 @@ const getContentTypeForTabs = (block) => {
   }
   if (block.querySelector('.toggle-Photography-Plans')) {
     return CONTENT_TYPES_TABS.photoGraphyPlans;
+  }
+  if (block.querySelector('.toggle-Creative-Cloud-All-Apps-Tab-List')) {
+    return CONTENT_TYPES_TABS.creativeCloudAllApps;
   }
   return CONTENT_TYPES_TABS.default;
 };
@@ -78,19 +82,11 @@ const makeContentBlock = (node, type, document, additionalSection = []) => {
   if (contentBlock) {
     const fragment = document.createDocumentFragment();
     switch (type) {
-      case CONTENT_TYPES_TABS.card.type: {
-        fragment.appendChild(contentBlock);
-        createCardsBlock(contentBlock, document, {
-          isCardBlockNested: true,
-          additionalSection,
-        });
-        break;
-      }
+      case CONTENT_TYPES_TABS.card.type:
       case CONTENT_TYPES_TABS.photoGraphyPlans.type: {
         const closest = node.closest('.flex');
         fragment.appendChild(closest);
         createCardsBlock(closest, document, {
-          isCardBlockNested: true,
           additionalSection,
         });
         break;

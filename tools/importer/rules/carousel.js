@@ -10,7 +10,7 @@ const getVariants = (block) => {
   if (!block?.querySelector('.dexter-Carousel-content--fullwidth, .hawks-MultiViewCarousel-content--fullwidth')) {
     variant.push('container');
   }
-  if (!block?.querySelector('.dexter-Carousel--previous, .hawks-MultiViewCarousel---previous')) {
+  if (!block?.querySelector('.dexter-Carousel--previous, .hawks-MultiViewCarousel--previous')) {
     variant.push('no-buttons');
   }
   let carousel = '.dexter-Carousel';
@@ -41,6 +41,21 @@ const makeSectionMetadataForSlides = (unquieId, document, slide) => {
   }
   sectionMetaDataTable.classList.add('import-table');
   return sectionMetaDataTable;
+};
+
+const makeCTA = ({ slide, document }) => {
+  const cta = slide.querySelector('.dexter-Cta > a');
+  const ctaText = cta?.querySelector('.spectrum-Button-label')?.textContent;
+  const href = cta.getAttribute('href');
+  if (ctaText) {
+    const ctaAnchor = document.createElement('a');
+    ctaAnchor.setAttribute('href', href);
+    const bCta = document.createElement('b');
+    bCta.textContent = ctaText;
+    ctaAnchor.appendChild(bCta);
+    return [ctaAnchor];
+  }
+  return [];
 };
 
 const makeText = ({ slide, document, isElementReturn = false }) => {
@@ -86,7 +101,7 @@ const makeImage = ({ slide, document }) => {
     }
     const alt = image.getAttribute('alt');
     const src = image.getAttribute('src');
-    if (alt) {
+    if (alt != null) {
       if (src && src.indexOf('https') === -1) {
         imgSrc = `https://www.adobe.com/${image.getAttribute('src')}`;
       } else {
@@ -105,6 +120,7 @@ const makeImage = ({ slide, document }) => {
     }
     elements.push(imgLink);
   });
+
   return elements;
 };
 
@@ -152,6 +168,7 @@ const makeMarquee = ({ slide, document }) => {
 };
 
 const createSlideBlocks = (block, document) => {
+  // eslint-disable-next-line no-debugger
   if (!block) {
     return [];
   }
@@ -163,6 +180,9 @@ const createSlideBlocks = (block, document) => {
   }
   if (block.className.includes('text')) {
     return makeText({ slide: block, document });
+  }
+  if (block.className.includes('cta')) {
+    return makeCTA({ slide: block, document });
   }
   const cumlativeElements = [];
   const { children } = block;

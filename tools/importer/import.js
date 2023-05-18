@@ -37,6 +37,8 @@ import createBreadcrumbsBlock from './rules/breadcrumbs.js';
 import createMetadataBlock from './rules/metaData.js';
 import { createCardMetadata } from './rules/metaData.js';
 
+// import createCardsBlock from './rules/creativecloud/file-types/cards.js';
+
 export default {
   /**
    * Apply DOM operations to the provided document and return
@@ -88,7 +90,7 @@ export default {
     elements.forEach((element) => {
       const styles = window.getComputedStyle(element);
       const colors = ['rgba(0, 0, 0, 0)', 'rgb(255, 255, 255)', 'rgb(0, 0, 0)'];
-      if (!colors.includes(styles.backgroundColor)) {
+      if (styles.backgroundColor && !colors.includes(styles.backgroundColor)) {
         element.setAttribute('data-bgcolor', rgbToHex(styles.backgroundColor));
       }
 
@@ -154,11 +156,15 @@ export default {
       createTable,
       createTabsBlocks,
       createImage,
+<<<<<<< HEAD
       createMarqueeSplitBlocks,
       createJumpToBlocks,
       createLongFormTextBlocks,
       createConsonantCardBlock,
       createVideo
+=======
+      createHowTo,
+>>>>>>> main
     } = fetchBlockScript(params.originalURL);
 
     const { body } = document;
@@ -281,6 +287,8 @@ export default {
           break;
         case constants.video:
           createVideo(block, document);
+        case constants.howTo:
+          createHowTo(block, document);
           break;
         default:
           block.before(document.createElement('hr'));
@@ -292,7 +300,11 @@ export default {
       const divOffset = parseInt(id.split('-').pop(), 10);
       createBlocks(name, divOffset);
     });
+<<<<<<< HEAD
     createMetadataBlock(document, cardMetadataTable);
+=======
+
+>>>>>>> main
     return body;
   },
 };

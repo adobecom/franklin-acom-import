@@ -27,4 +27,5 @@ export default {
   longFormText: 'longformtext',
   consonantCard: 'consonantcard',
   video: 'video',
+  howTo: 'howto',
 };
