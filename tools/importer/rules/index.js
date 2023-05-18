@@ -16,6 +16,11 @@ import createTable from './table.js';
 import createTabsBlocks from './tabs.js';
 import createImage from './image.js';
 import guessColumnsBlocks from './columns.js';
+import createMarqueeSplitBlocks from './marqueeSplit.js';
+import createJumpToBlocks from './jumpTo.js';
+import createLongFormTextBlocks from './longFormText.js';
+import createConsonantCardBlock from './consonantCard.js';
+import createVideo from './video.js';
 
 export default {
   createAccordionBlocks,
@@ -36,4 +41,9 @@ export default {
   createTable,
   createTabsBlocks,
   createImage,
+  createMarqueeSplitBlocks,
+  createJumpToBlocks,
+  createLongFormTextBlocks,
+  createConsonantCardBlock,
+  createVideo,
 };

@@ -33,6 +33,9 @@ import { rgbToHex } from './utils.js';
 */
 
 import fetchBlockScript from './fetchBlockScript.js';
+import createBreadcrumbsBlock from './rules/breadcrumbs.js';
+import createMetadataBlock from './rules/metaData.js';
+import { createCardMetadata } from './rules/metaData.js';
 
 export default {
   /**
@@ -56,6 +59,8 @@ export default {
     /*
       clean
     */
+
+    createBreadcrumbsBlock(document);
     // use helper method to remove header, footer, etc.
     WebImporter.DOMUtils.remove(body, [
       '.globalnavfooter',
@@ -78,12 +83,26 @@ export default {
     const main = document.querySelector('main');
 
     // set backgroundColor attribute
+    params.elementId = {};
     const elements = main.querySelectorAll('*');
     elements.forEach((element) => {
       const styles = window.getComputedStyle(element);
       const colors = ['rgba(0, 0, 0, 0)', 'rgb(255, 255, 255)', 'rgb(0, 0, 0)'];
       if (!colors.includes(styles.backgroundColor)) {
         element.setAttribute('data-bgcolor', rgbToHex(styles.backgroundColor));
+      }
+
+      //set border attribute for inset text
+      const borderLeft = styles.borderLeft.split(' ')[0];
+      if(borderLeft !== '0px'){
+        const text = element.querySelectorAll('.text');
+        text.forEach((el) => {
+          el.setAttribute('data-borderleft', true);
+        });
+      }
+
+      if(element.id){
+        params.elementId[element.id] = element;
       }
     });
 
@@ -135,9 +154,15 @@ export default {
       createTable,
       createTabsBlocks,
       createImage,
+      createMarqueeSplitBlocks,
+      createJumpToBlocks,
+      createLongFormTextBlocks,
+      createConsonantCardBlock,
+      createVideo
     } = fetchBlockScript(params.originalURL);
 
     const { body } = document;
+    const cardMetadataTable = await createCardMetadata(document, params.originalURL);
 
     body.querySelectorAll('s,u').forEach((s) => {
       const span = document.createElement('span');
@@ -242,6 +267,21 @@ export default {
         case constants.image:
           createImage(block, document);
           break;
+        case constants.marqueeSplit:
+          createMarqueeSplitBlocks(block, document);
+          break;
+        case constants.jumpTo:
+          createJumpToBlocks(block, document, params);
+          break;
+        case constants.longFormText:
+          createLongFormTextBlocks(block, document);
+          break;
+        case constants.consonantCard:
+          createConsonantCardBlock(block, document);
+          break;
+        case constants.video:
+          createVideo(block, document);
+          break;
         default:
           block.before(document.createElement('hr'));
           block.replaceWith(missingScriptTable(blockName, block, document));
@@ -252,6 +292,7 @@ export default {
       const divOffset = parseInt(id.split('-').pop(), 10);
       createBlocks(name, divOffset);
     });
+    createMetadataBlock(document, cardMetadataTable);
     return body;
   },
 };

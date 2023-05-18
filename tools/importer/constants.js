@@ -22,4 +22,9 @@ export default {
   promoColumn: 'promocols',
   table: 'table',
   image: 'image',
+  marqueeSplit: 'marqueesplit',
+  jumpTo: 'jumpto',
+  longFormText: 'longformtext',
+  consonantCard: 'consonantcard',
+  video: 'video',
 };
