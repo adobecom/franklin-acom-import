@@ -22,6 +22,7 @@ import createLongFormTextBlocks from './longFormText.js';
 import createConsonantCardBlock from './consonantCard.js';
 import createVideo from './video.js';
 import createHowTo from './howTo.js';
+import createHorizontalcardBlocks from './horizontalCard.js';
 
 export default {
   createAccordionBlocks,
@@ -48,4 +49,5 @@ export default {
   createConsonantCardBlock,
   createVideo,
   createHowTo,
+  createHorizontalcardBlocks,
 };

@@ -28,4 +28,5 @@ export default {
   consonantCard: 'consonantcard',
   video: 'video',
   howTo: 'howto',
+  horizontalCard: 'horizontalcard',
 };

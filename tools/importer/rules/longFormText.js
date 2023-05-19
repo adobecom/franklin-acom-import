@@ -1,3 +1,4 @@
+import createHorizontalcardBlocks from './horizontalCard.js';
 const BASE_URL = 'https://www.adobe.com';
 
 const getTableName = (element, index, dataLength, imageFirst) => {
@@ -43,6 +44,7 @@ export default function createLongFormTextBlocks(block, document) {
   });
 
   let imageFirst = false;
+  let cardFirst = false;
   allData.forEach((element, index) => {
     const textDiv = document.createElement('div');
     let tableName = getTableName(element, index, allData.length, imageFirst);
@@ -52,6 +54,14 @@ export default function createLongFormTextBlocks(block, document) {
       tableName = 'text(full width, no spacing top, xl spacing bottom)';
       imageFirst = true;
     }else if(element.classList.contains('text')){
+      const cardEl = element.closest('.xfreference');
+      if(cardEl){
+        if(cardFirst){
+          return;
+        }
+        createHorizontalcardBlocks(cardEl, document, true);
+        cardFirst = true;
+      }
       let previousElement = element.previousElementSibling;
       if(previousElement?.classList.contains('title')){
         const tmpPreviousElement = previousElement.previousElementSibling;

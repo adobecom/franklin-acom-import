@@ -162,6 +162,7 @@ export default {
       createConsonantCardBlock,
       createVideo,
       createHowTo,
+      createHorizontalcardBlocks,
     } = fetchBlockScript(params.originalURL);
 
     const { body } = document;
@@ -286,6 +287,9 @@ export default {
           createVideo(block, document);
         case constants.howTo:
           createHowTo(block, document);
+          break;
+        case constants.horizontalCard:
+          createHorizontalcardBlocks(block,document);
           break;
         default:
           block.before(document.createElement('hr'));
