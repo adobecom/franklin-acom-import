@@ -1,19 +1,5 @@
 const BASE_URL = 'https://www.adobe.com';
 
-function makeBGImage(block, document, alt) {
-  const bgImage = block?.querySelector('div[style]');
-  const image = bgImage?.getAttribute('style').split('"')[1];
-
-  let imageUrl = [];
-  if (image.indexOf('http://localhost:3001') !== -1) {
-    imageUrl = image.split('http://localhost:3001');
-  }
-  const imageTag = document.createElement('img');
-  imageTag.src = BASE_URL + imageUrl[1];
-  imageTag.alt = alt;
-  return imageTag;
-}
-
 export default function createMarqueeSplitBlocks(block, document) {
   const cells = [['marquee (split, one-third, dark)']];
 
@@ -23,7 +9,6 @@ export default function createMarqueeSplitBlocks(block, document) {
     marqueeWrapper = marqueeWrapper.querySelector('.aem-Grid');
   }
 
-  const imageWrapper = marqueeWrapper.children[0];
   const contentWrapper = marqueeWrapper.children[1];
 
   //Marquee button
@@ -45,14 +30,16 @@ export default function createMarqueeSplitBlocks(block, document) {
     spectrumButton.replaceWith(btnWrapper);
   }
 
-  const image = imageWrapper.querySelector('img');
+  const bgcolor = block
+    .querySelector('div[data-bgcolor]')
+    ?.getAttribute('data-bgcolor');
 
-  const bgImage = makeBGImage(block, document, image?.alt);
-  if(bgImage){
-    cells.push([bgImage]);
+  if(bgcolor){
+    cells.push([bgcolor]);
   }
+  const image = block.querySelector('img');
 
-  cells.push([contentWrapper]);
+  cells.push([contentWrapper, image]);
   const table = WebImporter.DOMUtils.createTable(cells, document);
   table.classList.add('import-table');
   block.replaceWith(table);
