@@ -163,6 +163,7 @@ export default {
       createVideo,
       createHowTo,
       createHorizontalcardBlocks,
+      createIconBlockFragment,
     } = fetchBlockScript(params.originalURL);
 
     const { body } = document;
@@ -275,7 +276,7 @@ export default {
           createMarqueeSplitBlocks(block, document);
           break;
         case constants.jumpTo:
-          createJumpToBlocks(block, document, params);
+          createJumpToBlocks(block, document, params, url);
           break;
         case constants.longFormText:
           createLongFormTextBlocks(block, document);
@@ -290,6 +291,9 @@ export default {
           break;
         case constants.horizontalCard:
           createHorizontalcardBlocks(block,document);
+          break;
+        case constants.iconBlockFragment:
+          createIconBlockFragment(block, document);
           break;
         default:
           block.before(document.createElement('hr'));

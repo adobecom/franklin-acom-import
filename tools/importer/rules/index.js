@@ -1,6 +1,6 @@
 import createAccordionBlocks from './accordion.js';
 import createMarqueeBlocks from './marquee.js';
-import createIconBlock from './iconblock.js';
+import createIconBlock, { createIconBlockFragment }  from './iconblock.js';
 import createZPatternBlock from './zPattern.js';
 import createMasonryBlock from './masonry.js';
 import createMerchBlock from './merchBlock.js';
@@ -50,4 +50,5 @@ export default {
   createVideo,
   createHowTo,
   createHorizontalcardBlocks,
+  createIconBlockFragment,
 };

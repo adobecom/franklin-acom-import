@@ -1,4 +1,5 @@
 const BASE_URL = 'https://www.adobe.com';
+const MILO_URL = 'https://main--dc--adobecom.hlx.page';
 
 //Find first heading element after anchor element
 const findAnchorHeading = (anchorParent) => {
@@ -15,7 +16,7 @@ const findAnchorHeading = (anchorParent) => {
   return findAnchorHeading(anchorParent.parentElement);
 };
 
-export default function createJumpToBlocks(block, document, params) {
+export default function createJumpToBlocks(block, document, params, url) {
   const position = block.querySelectorAll('.position');
 
   const linkSection = position[0];
@@ -23,11 +24,12 @@ export default function createJumpToBlocks(block, document, params) {
 
   const linkSectionLinks = linkSection.querySelectorAll('a');
   linkSectionLinks.forEach((link) => {
+    const pathname = new URL(url).pathname.split('.')[0];
     const linkId = link.href.split('#').pop();
     const anchorParent = params.elementId[linkId]?.parentElement;
     const heading = findAnchorHeading(anchorParent);
     if(heading) {
-      const hrefLink = '#' + heading.toLowerCase().trim().replace(/[^a-zA-Z0-9-\s]/g, '').replace(/-/g, ' ').split(' ').join('-');
+      const hrefLink = MILO_URL + pathname + '#' + heading.toLowerCase().trim().replace(/[^a-zA-Z0-9-\s]/g, '').replace(/-/g, ' ').split(' ').join('-');
       link.setAttribute('href', hrefLink);
     }
   });

@@ -23,10 +23,10 @@ const getTableName = (element, index, dataLength, imageFirst) => {
 }
 
 export default function createLongFormTextBlocks(block, document) {
-  let allData = [...block.querySelectorAll('.text, .image, .title')];
+  let allData = [...block.querySelectorAll('.text, .image, .title, .spectrum-Button')];
   if(allData.length > 1){
     allData = allData.filter((el, index) => {
-      if(el.classList.contains('text')){
+      if(el.classList.contains('text') || el.classList.contains('spectrum-Button')){
         return el;
       }
       if(el.classList.contains('image') && index === 0){
@@ -85,6 +85,22 @@ export default function createLongFormTextBlocks(block, document) {
     }else if(element.classList.contains('title') && allData.length === 1){
       tableName = 'text(full width, no spacing)';
       textDiv.appendChild(element.cloneNode(true));
+    }else if(element.classList.contains('spectrum-Button')){
+      tableName = 'text(full width, no spacing)';
+      const btnWrapper = document.createElement('a');
+      btnWrapper.href = element.href;
+      let btnContent = null;
+      if(element?.classList.contains('doccloud-Button--blue') ||
+        element?.classList.contains('spectrum-Button--accent')){
+        btnContent = document.createElement('b');
+      }
+      if(element?.classList.contains('doccloud-Button--white')){
+        btnContent = document.createElement('i');
+      }
+
+      btnContent.textContent = element.textContent;
+      btnWrapper.appendChild(btnContent);
+      textDiv.appendChild(btnWrapper);
     }else{
       return;
     }

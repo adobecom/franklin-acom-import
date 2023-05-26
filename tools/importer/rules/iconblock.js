@@ -1,5 +1,14 @@
 /* global WebImporter */
 
+export const createIconBlockFragment = (block, document) => {
+  const iconBlock = document.createElement('a');
+  iconBlock.href = 'https://main--dc--adobecom.hlx.page/dc-shared/fragments/seo-articles/acrobat-color-blade';
+  iconBlock.textContent = 'https://main--dc--adobecom.hlx.page/dc-shared/fragments/seo-articles/acrobat-color-blade';
+
+  block.before(document.createElement('hr'));
+  block.replaceWith(iconBlock);
+};
+
 const creativityForAllIconBlock = (block, document) => {
   // background color or background image
   const bgImage = block

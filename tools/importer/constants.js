@@ -29,4 +29,5 @@ export default {
   video: 'video',
   howTo: 'howto',
   horizontalCard: 'horizontalcard',
+  iconBlockFragment: 'iconblockfragment',
 };
