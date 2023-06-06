@@ -30,4 +30,7 @@ export default {
   howTo: 'howto',
   horizontalCard: 'horizontalcard',
   iconBlockFragment: 'iconblockfragment',
+  marqueeRight: 'marqueeright',
+  marqueeDefault: 'marqueedefault',
+  iconBlockGroup: 'iconblockgroup',
 };

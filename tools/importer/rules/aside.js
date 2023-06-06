@@ -45,9 +45,18 @@ export default function createAsideBlocks(block, document) {
     contentWrapper.appendChild(link);
   }
 
-  cells.push([contentWrapper]);
+  cells.push([imageWrapper, contentWrapper]);
   const table = WebImporter.DOMUtils.createTable(cells, document);
   table.classList.add('import-table');
+
+  const sectionMetadataCells = [['Section Metadata'], ['style', 'grid width 8, xl spacing ']];
+  const sectionMetaDataTable = WebImporter.DOMUtils.createTable(
+    sectionMetadataCells,
+    document,
+  );
+  sectionMetaDataTable.classList.add('import-table');
+
   block.before(document.createElement('hr'));
+  block.after(sectionMetaDataTable);
   block.replaceWith(table);
 }

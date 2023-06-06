@@ -1,16 +1,20 @@
 import createHorizontalcardBlocks from './horizontalCard.js';
 const BASE_URL = 'https://www.adobe.com';
 
-const getTableName = (element, index, dataLength, imageFirst) => {
-  const inset = element.getAttribute('data-borderleft');
+const getTableName = (data, index) => {
+  let imageFirst = false;
+  if(index === 1){
+    imageFirst = data[0].classList.contains('image');
+  }
+  const inset = data[index].getAttribute('data-borderleft');
   let block = 'long-form'
   let size = 'l-body';
   let spacing = 'xl spacing bottom';
 
-  if(index === 0 || (index === 1 && imageFirst)){
+  if(index === 0 || imageFirst){
     size = 'large';
   }
-  if(index === dataLength - 1){
+  if(index === data.length - 1){
     spacing = 'no spacing';
   }
 
@@ -23,13 +27,13 @@ const getTableName = (element, index, dataLength, imageFirst) => {
 }
 
 export default function createLongFormTextBlocks(block, document) {
-  let allData = [...block.querySelectorAll('.text, .image, .title, .spectrum-Button')];
+  let allData = [...block.querySelectorAll('.text, .image, .title, .spectrum-Button, .video')];
   if(allData.length > 1){
     allData = allData.filter((el, index) => {
-      if(el.classList.contains('text') || el.classList.contains('spectrum-Button')){
-        return el;
-      }
-      if(el.classList.contains('image') && index === 0){
+      if(el.classList.contains('text') || 
+        el.classList.contains('spectrum-Button') ||
+        el.classList.contains('video') || 
+        (el.classList.contains('image') && index === 0)){
         return el;
       }
     });
@@ -43,16 +47,14 @@ export default function createLongFormTextBlocks(block, document) {
     }
   });
 
-  let imageFirst = false;
   let cardFirst = false;
   allData.forEach((element, index) => {
     const textDiv = document.createElement('div');
-    let tableName = getTableName(element, index, allData.length, imageFirst);
+    let tableName = getTableName(allData, index);
 
     if(index === 0 && element.classList.contains('image')){
       textDiv.appendChild(element.cloneNode(true));
       tableName = 'text(full width, no spacing top, xl spacing bottom)';
-      imageFirst = true;
     }else if(element.classList.contains('text')){
       const cardEl = element.closest('.xfreference');
       if(cardEl){
@@ -64,18 +66,14 @@ export default function createLongFormTextBlocks(block, document) {
       }
       let previousElement = element.previousElementSibling;
       if(previousElement?.classList.contains('title')){
-        const tmpPreviousElement = previousElement.previousElementSibling;
-        textDiv.appendChild(previousElement);
-        previousElement = tmpPreviousElement;
+        textDiv.appendChild(previousElement.cloneNode(true));
       }
 
       textDiv.appendChild(element.cloneNode(true));
 
       let nextElement = element.nextElementSibling;
       if(nextElement?.classList.contains('image')){
-        const tmpNextElement = nextElement.nextElementSibling;
-        textDiv.appendChild(nextElement);
-        nextElement = tmpNextElement;
+        textDiv.appendChild(nextElement.cloneNode(true));
       }
 
       if(nextElement?.classList.contains('horizontalRule')){
@@ -101,6 +99,12 @@ export default function createLongFormTextBlocks(block, document) {
       btnContent.textContent = element.textContent;
       btnWrapper.appendChild(btnContent);
       textDiv.appendChild(btnWrapper);
+    }else if(element.classList.contains('video')){
+      const video = element.querySelector('iframe');
+      const videoLink = document.createElement('a');
+      videoLink.src = video.src;
+      videoLink.textContent = video.src;
+      textDiv.appendChild(videoLink);
     }else{
       return;
     }

@@ -156,7 +156,6 @@ export default {
       createTable,
       createTabsBlocks,
       createImage,
-      createMarqueeSplitBlocks,
       createJumpToBlocks,
       createLongFormTextBlocks,
       createConsonantCardBlock,
@@ -164,16 +163,18 @@ export default {
       createHowTo,
       createHorizontalcardBlocks,
       createIconBlockFragment,
+      createIconBlockGroup,
+      createMarqueeVariantsBlocks,
     } = fetchBlockScript(params.originalURL);
 
     const { body } = document;
-    const cardMetadataTable = await createCardMetadata(document, params.originalURL);
 
     body.querySelectorAll('s,u').forEach((s) => {
       const span = document.createElement('span');
       span.innerHTML = s.innerHTML;
       s.replaceWith(span);
     });
+    const cardMetadataTable = await createCardMetadata(document, params.originalURL);
 
     /*
       missing script table
@@ -273,7 +274,7 @@ export default {
           createImage(block, document);
           break;
         case constants.marqueeSplit:
-          createMarqueeSplitBlocks(block, document);
+          createMarqueeVariantsBlocks(block, document, 'split');
           break;
         case constants.jumpTo:
           createJumpToBlocks(block, document, params, url);
@@ -286,6 +287,7 @@ export default {
           break;
         case constants.video:
           createVideo(block, document);
+          break;
         case constants.howTo:
           createHowTo(block, document);
           break;
@@ -294,6 +296,15 @@ export default {
           break;
         case constants.iconBlockFragment:
           createIconBlockFragment(block, document);
+          break;
+        case constants.marqueeRight:
+          createMarqueeVariantsBlocks(block, document, 'right');
+          break;
+        case constants.marqueeDefault:
+          createMarqueeVariantsBlocks(block, document);
+          break;
+        case constants.iconBlockGroup:
+          createIconBlockGroup(block, document);
           break;
         default:
           block.before(document.createElement('hr'));

@@ -16,13 +16,14 @@ import createTable from './table.js';
 import createTabsBlocks from './tabs.js';
 import createImage from './image.js';
 import guessColumnsBlocks from './columns.js';
-import createMarqueeSplitBlocks from './marqueeSplit.js';
 import createJumpToBlocks from './jumpTo.js';
 import createLongFormTextBlocks from './longFormText.js';
 import createConsonantCardBlock from './consonantCard.js';
 import createVideo from './video.js';
 import createHowTo from './howTo.js';
 import createHorizontalcardBlocks from './horizontalCard.js';
+import createIconBlockGroup from './iconBlockGroup.js';
+import createMarqueeVariantsBlocks from './marqueeVariants.js';
 
 export default {
   createAccordionBlocks,
@@ -43,7 +44,6 @@ export default {
   createTable,
   createTabsBlocks,
   createImage,
-  createMarqueeSplitBlocks,
   createJumpToBlocks,
   createLongFormTextBlocks,
   createConsonantCardBlock,
@@ -51,4 +51,6 @@ export default {
   createHowTo,
   createHorizontalcardBlocks,
   createIconBlockFragment,
+  createIconBlockGroup,
+  createMarqueeVariantsBlocks,
 };
