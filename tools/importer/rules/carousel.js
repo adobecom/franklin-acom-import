@@ -43,21 +43,6 @@ const makeSectionMetadataForSlides = (unquieId, document, slide) => {
   return sectionMetaDataTable;
 };
 
-const makeCTA = ({ slide, document }) => {
-  const cta = slide.querySelector('.dexter-Cta > a');
-  const ctaText = cta?.querySelector('.spectrum-Button-label')?.textContent;
-  const href = cta.getAttribute('href');
-  if (ctaText) {
-    const ctaAnchor = document.createElement('a');
-    ctaAnchor.setAttribute('href', href);
-    const bCta = document.createElement('b');
-    bCta.textContent = ctaText;
-    ctaAnchor.appendChild(bCta);
-    return [ctaAnchor];
-  }
-  return [];
-};
-
 const makeText = ({ slide, document, isElementReturn = false }) => {
   const textContents = slide.querySelectorAll('.text .cmp-text p,h1');
   const para = document.createElement('p');
@@ -78,6 +63,27 @@ const makeText = ({ slide, document, isElementReturn = false }) => {
     return para;
   }
   return [para];
+};
+
+const makeCTA = ({ slide, document }) => {
+  const elements = [];
+  const textContent = makeText({ slide, document, isElementReturn: true });
+  if (textContent) {
+    elements.push(textContent);
+  }
+  const cta = slide.querySelector('.dexter-Cta > a');
+  const ctaText = cta?.querySelector('.spectrum-Button-label')?.textContent;
+  const href = cta.getAttribute('href');
+  if (ctaText) {
+    const ctaAnchor = document.createElement('a');
+    ctaAnchor.setAttribute('href', href);
+    const bCta = document.createElement('b');
+    bCta.textContent = ctaText;
+    ctaAnchor.appendChild(bCta);
+    elements.push(ctaAnchor);
+    return elements;
+  }
+  return elements;
 };
 
 const makeVideo = ({ slide: slideBlock, document }) => {
@@ -168,7 +174,6 @@ const makeMarquee = ({ slide, document }) => {
 };
 
 const createSlideBlocks = (block, document) => {
-  // eslint-disable-next-line no-debugger
   if (!block) {
     return [];
   }
@@ -199,7 +204,11 @@ const createSlide = (slide, document) => {
   if (slide?.querySelector('div[daa-lh="marquee"')) {
     return makeMarquee({ slide, document });
   }
-  const flexContainer = slide.querySelector('.dexter-FlexContainer');
+  let carouselContainer = '.carousel-item-content';
+  if (slide.querySelector('.multiViewCarousel-item-content')) {
+    carouselContainer = '.multiViewCarousel-item-content';
+  }
+  const flexContainer = slide.querySelector(carouselContainer);
   const slideElements = createSlideBlocks(flexContainer, document);
   return slideElements;
 };

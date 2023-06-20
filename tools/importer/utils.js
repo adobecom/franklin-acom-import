@@ -1,6 +1,6 @@
 function rgbToHex(rgb) {
   // Split the RGB color value into its components
-  const components = rgb.match(/\d+/g);
+  const components = rgb.match(/\d+/g) ?? [];
 
   // Convert each component to hexadecimal
   const hexComponents = components.map((component) => {

@@ -32,15 +32,20 @@ const makeImage = (node, document) => {
 const makeText = (node, document) => {
   const textDiv = document.createElement('div');
   const headingText = node.querySelector('.cmp-title h3');
-  textDiv.appendChild(headingText);
-  const mediaContent = node.querySelector('.text .cmp-text');
-  if (mediaContent) {
-    textDiv.appendChild(mediaContent);
+  if (headingText) {
+    textDiv.appendChild(headingText);
+  }
+
+  const mediaContent = node.querySelectorAll('.text .cmp-text');
+  if (mediaContent && mediaContent.length > 0) {
+    mediaContent.forEach((media) => {
+      textDiv.appendChild(media);
+    });
   }
 
   const cta = node.querySelector('.cta > .dexter-Cta > a');
 
-  const href = cta.getAttribute('href');
+  const href = cta?.getAttribute('href');
 
   const ctaText = cta?.querySelector(
     ':scope > .spectrum-Button-label',
