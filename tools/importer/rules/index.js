@@ -17,6 +17,9 @@ import createTabsBlocks from './tabs.js';
 import createImage from './image.js';
 import guessColumnsBlocks from './columns.js';
 import createHowTo from './howTo.js';
+import createBreadcrumbBlock from './breadcrumbs.js';
+import createMetadataBlock from './metaData.js';
+import createJumpToSectionBlocks from './jumptosection.js';
 
 export default {
   createAccordionBlocks,
@@ -38,4 +41,7 @@ export default {
   createTabsBlocks,
   createImage,
   createHowTo,
+  createBreadcrumbBlock,
+  createMetadataBlock,
+  createJumpToSectionBlocks,
 };

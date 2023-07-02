@@ -279,7 +279,8 @@ function createMarquee(block, document) {
 export default function createMarqueeBlocks(block, document) {
   const elements = createMarquee(block, document);
   const table = window.WebImporter.DOMUtils.createTable(elements, document);
-  block.before(document.createElement('hr'));
+  //Commenting this as we don't section line between breadcrumb and marquee as per authors
+  //block.before(document.createElement('hr'));
   table.classList.add('import-table');
   block.replaceWith(table);
 }

@@ -34,6 +34,12 @@ import { rgbToHex } from './utils.js';
 
 import fetchBlockScript from './fetchBlockScript.js';
 
+/*
+import breadcrumb
+*/
+import createBreadcrumbBlock from './rules/breadcrumbs.js';
+
+
 // import createCardsBlock from './rules/creativecloud/file-types/cards.js';
 
 export default {
@@ -54,6 +60,8 @@ export default {
     ele.forEach((node) => {
       node.innerHTML = node.innerHTML.replace(/&nbsp;/g, ' ');
     });
+
+    createBreadcrumbBlock(document);
 
     /*
       clean
@@ -138,6 +146,8 @@ export default {
       createTabsBlocks,
       createImage,
       createHowTo,
+      createMetadataBlock,
+      createJumpToSectionBlocks
     } = fetchBlockScript(params.originalURL);
 
     const { body } = document;
@@ -248,6 +258,9 @@ export default {
         case constants.howTo:
           createHowTo(block, document);
           break;
+        case constants.jumptosection:
+          createJumpToSectionBlocks(block, document, url);
+          break;    
         default:
           block.before(document.createElement('hr'));
           block.replaceWith(missingScriptTable(blockName, block, document));
@@ -258,7 +271,7 @@ export default {
       const divOffset = parseInt(id.split('-').pop(), 10);
       createBlocks(name, divOffset);
     });
-
+    createMetadataBlock(document);
     return body;
   },
 };

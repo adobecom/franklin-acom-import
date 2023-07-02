@@ -23,4 +23,7 @@ export default {
   table: 'table',
   image: 'image',
   howTo: 'howto',
+  breadcrumbs: 'breadcrumbs',
+  metaData: 'metaData',
+  jumptosection: 'jumptosection',
 };
