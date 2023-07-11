@@ -67,13 +67,6 @@ const createMetadataBlock = (document, cardMetadataTable) => {
     meta.Image = el;
   }
 
-  meta['Gnav Source'] = '/dc-shared/gnav';
-  meta['Footer Source'] = '/dc-shared/footer';
-
-  meta.Chromeext = 'https://main--dc--adobecom.hlx.live/dc-shared/fragments/shared-fragments/browser-extension/browser-extension-chrome';
-  meta.Edgeext = 'https://main--dc--adobecom.hlx.live/dc-shared/fragments/shared-fragments/browser-extension/browser-extension-edge'
-  meta.Header = 'gnav';
-
   const block = WebImporter.Blocks.getMetadataBlock(document, meta);
   main.append(document.createElement('hr'));
   main.append(block);

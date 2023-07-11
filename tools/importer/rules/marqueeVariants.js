@@ -156,7 +156,8 @@ export default function createMarqueeVariantsBlocks(block, document, variation) 
 
   if(variation === 'split'){
     marqueeAttributes.push('split', 'one-third', 'dark');
-    const content = makeContent(marqueeWrapper.children[1], document);
+    const contentWrapper = marqueeWrapper.children.length > 2 ? marqueeWrapper : marqueeWrapper.children[1];
+    const content = makeContent(contentWrapper, document);
     bgRow.push(bgColor);
     contentRow.push(content, image);
   }else if(variation === 'right'){
