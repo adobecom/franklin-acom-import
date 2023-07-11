@@ -1,5 +1,14 @@
 /* global WebImporter */
 
+export const createIconBlockFragment = (block, document) => {
+  const iconBlock = document.createElement('a');
+  iconBlock.href = 'https://main--dc--adobecom.hlx.page/dc-shared/fragments/seo-articles/acrobat-color-blade';
+  iconBlock.textContent = 'https://main--dc--adobecom.hlx.page/dc-shared/fragments/seo-articles/acrobat-color-blade';
+
+  block.before(document.createElement('hr'));
+  block.replaceWith(iconBlock);
+};
+
 const creativityForAllIconBlock = (block, document) => {
   // background color or background image
   const bgImage = block
@@ -13,6 +22,20 @@ const creativityForAllIconBlock = (block, document) => {
   if (bgImage) {
     bgImageElement = document.createElement('img');
     bgImageElement.src = bgImage;
+  }
+
+  //icon block button
+  const spectrumButton = block.querySelector('.spectrum-Button');
+  if(spectrumButton?.classList.contains('doccloud-Button--blue')){
+    const btnWrapper = document.createElement('b');
+    btnWrapper.appendChild(spectrumButton.cloneNode(true));
+    spectrumButton.replaceWith(btnWrapper);
+  }
+
+  if(spectrumButton?.classList.contains('doccloud-Button--white')){
+    const btnWrapper = document.createElement('i');
+    btnWrapper.appendChild(spectrumButton.cloneNode(true));
+    spectrumButton.replaceWith(btnWrapper);
   }
   const cells = [['icon-block (fullwidth, large)'], [block.cloneNode(true)]];
   const table = WebImporter.DOMUtils.createTable(cells, document);

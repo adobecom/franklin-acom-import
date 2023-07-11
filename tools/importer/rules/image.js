@@ -1,7 +1,21 @@
 /* global WebImporter */
 export default function createImage(block, document) {
-  const cells = [['text(full-width)']];
-  cells.push([block.cloneNode(true)]);
+  const images = block.querySelectorAll('img');
+  let cells = [];
+
+  //if there are more than one image in block
+  if(images.length > 1) {
+    cells = [['columns(contained, middle)']];
+    const row = [];
+    images.forEach((image) => {
+      row.push(image.cloneNode(true));
+    });
+    cells.push(row);
+  }else{
+    cells = [['text(full-width, no spacing)']];
+    cells.push([block.cloneNode(true)]);
+  }
+
   const table = WebImporter.DOMUtils.createTable(cells, document);
   table.classList.add('import-table');
 

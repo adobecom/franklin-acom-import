@@ -33,6 +33,9 @@ import { rgbToHex } from './utils.js';
 */
 
 import fetchBlockScript from './fetchBlockScript.js';
+import createBreadcrumbsBlock from './rules/breadcrumbs.js';
+import createMetadataBlock from './rules/metaData.js';
+import { createCardMetadata } from './rules/metaData.js';
 
 // import createCardsBlock from './rules/creativecloud/file-types/cards.js';
 
@@ -58,6 +61,8 @@ export default {
     /*
       clean
     */
+
+    createBreadcrumbsBlock(document);
     // use helper method to remove header, footer, etc.
     WebImporter.DOMUtils.remove(body, [
       '.globalnavfooter',
@@ -80,12 +85,26 @@ export default {
     const main = document.querySelector('main');
 
     // set backgroundColor attribute
+    params.elementId = {};
     const elements = main.querySelectorAll('*');
     elements.forEach((element) => {
       const styles = window.getComputedStyle(element);
       const colors = ['rgba(0, 0, 0, 0)', 'rgb(255, 255, 255)', 'rgb(0, 0, 0)'];
       if (styles.backgroundColor && !colors.includes(styles.backgroundColor)) {
         element.setAttribute('data-bgcolor', rgbToHex(styles.backgroundColor));
+      }
+
+      //set border attribute for inset text
+      const borderLeft = styles.borderLeft.split(' ')[0];
+      if(borderLeft !== '0px'){
+        const text = element.querySelectorAll('.text');
+        text.forEach((el) => {
+          el.setAttribute('data-borderleft', true);
+        });
+      }
+
+      if(element.id){
+        params.elementId[element.id] = element;
       }
     });
 
@@ -137,7 +156,15 @@ export default {
       createTable,
       createTabsBlocks,
       createImage,
+      createJumpToBlocks,
+      createLongFormTextBlocks,
+      createConsonantCardBlock,
+      createVideo,
       createHowTo,
+      createHorizontalcardBlocks,
+      createIconBlockFragment,
+      createIconBlockGroup,
+      createMarqueeVariantsBlocks,
     } = fetchBlockScript(params.originalURL);
 
     const { body } = document;
@@ -147,6 +174,7 @@ export default {
       span.innerHTML = s.innerHTML;
       s.replaceWith(span);
     });
+    const cardMetadataTable = await createCardMetadata(document, params.originalURL);
 
     /*
       missing script table
@@ -245,8 +273,38 @@ export default {
         case constants.image:
           createImage(block, document);
           break;
+        case constants.marqueeSplit:
+          createMarqueeVariantsBlocks(block, document, 'split');
+          break;
+        case constants.jumpTo:
+          createJumpToBlocks(block, document, params, url);
+          break;
+        case constants.longFormText:
+          createLongFormTextBlocks(block, document);
+          break;
+        case constants.consonantCard:
+          createConsonantCardBlock(block, document);
+          break;
+        case constants.video:
+          createVideo(block, document);
+          break;
         case constants.howTo:
           createHowTo(block, document);
+          break;
+        case constants.horizontalCard:
+          createHorizontalcardBlocks(block,document);
+          break;
+        case constants.iconBlockFragment:
+          createIconBlockFragment(block, document);
+          break;
+        case constants.marqueeRight:
+          createMarqueeVariantsBlocks(block, document, 'right');
+          break;
+        case constants.marqueeDefault:
+          createMarqueeVariantsBlocks(block, document);
+          break;
+        case constants.iconBlockGroup:
+          createIconBlockGroup(block, document);
           break;
         default:
           block.before(document.createElement('hr'));
@@ -258,6 +316,7 @@ export default {
       const divOffset = parseInt(id.split('-').pop(), 10);
       createBlocks(name, divOffset);
     });
+    createMetadataBlock(document, cardMetadataTable);
 
     return body;
   },
