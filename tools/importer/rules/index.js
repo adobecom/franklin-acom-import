@@ -1,5 +1,5 @@
 import createAccordionBlocks from './accordion.js';
-import createMarqueeBlocks, {createMarqueeQuiet} from './marquee.js';
+import createMarqueeBlocks from './marquee.js';
 //import createIconBlock from './iconblock.js';
 import createIconBlock, { createIconBlockFragment1, createIconBlockFragment2, createIconBlockFragment3 }  from './iconblock.js';
 import createZPatternBlock from './zPattern.js';
@@ -52,7 +52,6 @@ export default {
   createIconBlockFragment2,
   createIconBlockFragment3,
   createIconBlockGroup,
-  createMarqueeQuiet,
   mediaBlock,
   createMediaCardsBlock,
 };

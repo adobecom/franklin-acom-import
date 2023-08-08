@@ -30,7 +30,6 @@ export default {
   iconBlockFragment2: 'iconblockfragment2',
   iconBlockFragment3: 'iconblockfragment3',
   iconBlockGroup: 'iconBlockGroup',
-  marqueequiet: 'marqueequiet',
   media: 'media',
   mediaCardBlock: 'mediaCardBlock'
 };
