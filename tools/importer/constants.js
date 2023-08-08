@@ -26,4 +26,11 @@ export default {
   breadcrumbs: 'breadcrumbs',
   metaData: 'metaData',
   jumptosection: 'jumptosection',
+  iconBlockFragment1: 'iconblockfragment1',
+  iconBlockFragment2: 'iconblockfragment2',
+  iconBlockFragment3: 'iconblockfragment3',
+  iconBlockGroup: 'iconBlockGroup',
+  marqueequiet: 'marqueequiet',
+  media: 'media',
+  mediaCardBlock: 'mediaCardBlock'
 };

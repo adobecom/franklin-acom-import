@@ -29,18 +29,15 @@ import getBlocks from './services/getBlocks.js';
 import { rgbToHex } from './utils.js';
 
 /*
-  function to import rules
-*/
-
-import fetchBlockScript from './fetchBlockScript.js';
-
-/*
 import breadcrumb
 */
 import createBreadcrumbBlock from './rules/breadcrumbs.js';
+import { createCardMetadata } from './rules/metaData.js';
 
-
-// import createCardsBlock from './rules/creativecloud/file-types/cards.js';
+/*
+  function to import rules
+*/
+import fetchBlockScript from './fetchBlockScript.js';
 
 export default {
   /**
@@ -60,12 +57,10 @@ export default {
     ele.forEach((node) => {
       node.innerHTML = node.innerHTML.replace(/&nbsp;/g, ' ');
     });
-
-    createBreadcrumbBlock(document);
-
     /*
       clean
     */
+    createBreadcrumbBlock(document);
     // use helper method to remove header, footer, etc.
     WebImporter.DOMUtils.remove(body, [
       '.globalnavfooter',
@@ -86,14 +81,27 @@ export default {
     ]);
 
     const main = document.querySelector('main');
-
+    params.elementId = {};
     // set backgroundColor attribute
     const elements = main.querySelectorAll('*');
     elements.forEach((element) => {
       const styles = window.getComputedStyle(element);
-      const colors = ['rgba(0, 0, 0, 0)', 'rgb(255, 255, 255)', 'rgb(0, 0, 0)'];
+      const colors = ["rgba(0, 0, 0, 0)", "rgb(255, 255, 255)", "rgb(0, 0, 0)"];
       if (styles.backgroundColor && !colors.includes(styles.backgroundColor)) {
-        element.setAttribute('data-bgcolor', rgbToHex(styles.backgroundColor));
+        element.setAttribute("data-bgcolor", rgbToHex(styles.backgroundColor));
+      }
+
+      //set border attribute for inset text
+      const borderLeft = styles.borderLeft.split(" ")[0];
+      if (borderLeft !== "0px") {
+        const text = element.querySelectorAll(".text");
+        text.forEach((el) => {
+          el.setAttribute("data-borderleft", true);
+        });
+      }
+
+      if (element.id) {
+        params.elementId[element.id] = element;
       }
     });
 
@@ -105,6 +113,7 @@ export default {
     let latestOffset = 0;
     let prevOffset = 0;
     allBlockIds.forEach((id) => {
+      console.log("Block id: "+id);
       const currentOffset = parseInt(id.split('-').pop(), 10);
       latestOffset = latestOffset + offsetDiff + currentOffset - prevOffset;
       const block = body.querySelectorAll('div')[latestOffset];
@@ -147,9 +156,15 @@ export default {
       createImage,
       createHowTo,
       createMetadataBlock,
-      createJumpToSectionBlocks
+      createJumpToSectionBlocks,
+      createIconBlockFragment1,
+      createIconBlockFragment2,
+      createIconBlockFragment3,
+      createIconBlockGroup,
+      mediaBlock,
+      createMediaCardsBlock,
     } = fetchBlockScript(params.originalURL);
-
+    
     const { body } = document;
 
     body.querySelectorAll('s,u').forEach((s) => {
@@ -157,7 +172,7 @@ export default {
       span.innerHTML = s.innerHTML;
       s.replaceWith(span);
     });
-
+    const cardMetadataTable = await createCardMetadata(document, params.originalURL);
     /*
       missing script table
     */
@@ -180,9 +195,9 @@ export default {
         addedOffset += table.querySelectorAll('div').length;
       });
       return addedOffset;
-    };
-
+    };  
     const createBlocks = (blockName, divOffset) => {
+      console.log("block");
       const offsetDiff = findOffsetDiff();
       const block = body.querySelectorAll('div')[divOffset + offsetDiff];
       switch (blockName) {
@@ -254,24 +269,42 @@ export default {
           break;
         case constants.image:
           createImage(block, document);
-          break;
+          break;       
         case constants.howTo:
           createHowTo(block, document);
           break;
         case constants.jumptosection:
           createJumpToSectionBlocks(block, document, url);
-          break;    
+          break;  
+        case constants.iconBlockFragment1:
+          createIconBlockFragment1(block, document);
+          break;  
+        case constants.iconBlockFragment2:
+          createIconBlockFragment2(block, document);
+          break;  
+        case constants.iconBlockFragment3:
+          createIconBlockFragment3(block, document, params.originalURL);
+          break;  
+        case constants.iconBlockGroup:
+          createIconBlockGroup(block, document);
+          break;
+        case constants.media:
+          mediaBlock(block, document);
+          break;  
+        case constants.mediaCardBlock:
+          createMediaCardsBlock(block, document);
+          break;        
         default:
           block.before(document.createElement('hr'));
           block.replaceWith(missingScriptTable(blockName, block, document));
       }
     };
     allBlocks.forEach((block) => {
-      const { id, name } = block;
-      const divOffset = parseInt(id.split('-').pop(), 10);
+      const { id, name } = block; 
+      const divOffset = parseInt(id.split('-').pop(), 10);     
       createBlocks(name, divOffset);
     });
-    createMetadataBlock(document);
+    createMetadataBlock(document, cardMetadataTable);
     return body;
   },
 };

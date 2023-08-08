@@ -1,6 +1,7 @@
 import createAccordionBlocks from './accordion.js';
-import createMarqueeBlocks from './marquee.js';
-import createIconBlock from './iconblock.js';
+import createMarqueeBlocks, {createMarqueeQuiet} from './marquee.js';
+//import createIconBlock from './iconblock.js';
+import createIconBlock, { createIconBlockFragment1, createIconBlockFragment2, createIconBlockFragment3 }  from './iconblock.js';
 import createZPatternBlock from './zPattern.js';
 import createMasonryBlock from './masonry.js';
 import createMerchBlock from './merchBlock.js';
@@ -20,6 +21,9 @@ import createHowTo from './howTo.js';
 import createBreadcrumbBlock from './breadcrumbs.js';
 import createMetadataBlock from './metaData.js';
 import createJumpToSectionBlocks from './jumptosection.js';
+import createIconBlockGroup from './iconblockgroup.js';
+import mediaBlock from './mediaBlock.js'
+import createMediaCardsBlock from './mediaCards.js';
 
 export default {
   createAccordionBlocks,
@@ -44,4 +48,11 @@ export default {
   createBreadcrumbBlock,
   createMetadataBlock,
   createJumpToSectionBlocks,
+  createIconBlockFragment1,
+  createIconBlockFragment2,
+  createIconBlockFragment3,
+  createIconBlockGroup,
+  createMarqueeQuiet,
+  mediaBlock,
+  createMediaCardsBlock,
 };

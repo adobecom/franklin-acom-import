@@ -6,6 +6,6 @@ export default function createTextMarquee(block, document) {
   const table = WebImporter.DOMUtils.createTable(cells, document);
   table.classList.add('import-table');
 
-  block.before(document.createElement('hr'));
+  //block.before(document.createElement('hr'));
   block.replaceWith(table);
 }

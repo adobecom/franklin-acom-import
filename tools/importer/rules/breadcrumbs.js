@@ -15,8 +15,9 @@ export default function createBreadcrumbBlock (document){
       el.remove();
     }
 
+    
     if (elLink && elLink.href.indexOf('https') === -1) {
-      elLink.href =`https://www.adobe.com${elLink}`;
+      elLink.href =`https://www.adobe.com${elLink.href.replaceAll('http://localhost:3001','')}`;
     }
   });
 
