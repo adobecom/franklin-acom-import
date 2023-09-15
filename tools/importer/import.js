@@ -19,6 +19,11 @@
 import constants from './constants.js';
 
 /*
+  import locales
+*/
+import locales from './locales.js';
+
+/*
   import services
 */
 import getBlocks from './services/getBlocks.js';
@@ -141,6 +146,20 @@ export default {
     } = fetchBlockScript(params.originalURL);
 
     const { body } = document;
+     //Get the page locale from the page url passed to import
+     const pageLocale = url.split('/')[3];
+     let locale = '';
+     if (locales.includes(pageLocale)){
+       locale = '/'+pageLocale+'/';
+     }
+     const mainSection = body.querySelector('main');
+     const anchor = mainSection.querySelectorAll('a');
+     //Add #_dnt if the locale of link url is not same as page getting imported
+     anchor.forEach((node) => {
+       if(node.getAttribute('href').includes('https://www.adobe.com') && !node.getAttribute('href').includes(locale)){
+         node.setAttribute('href',node.getAttribute('href') + '#_dnt');
+       }
+     }); 
 
     body.querySelectorAll('s,u').forEach((s) => {
       const span = document.createElement('span');
