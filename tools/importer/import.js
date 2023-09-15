@@ -156,7 +156,7 @@ export default {
      const anchor = mainSection.querySelectorAll('a');
      //Add #_dnt if the locale of link url is not same as page getting imported
      anchor.forEach((node) => {
-       if(node.getAttribute('href').includes('https://www.adobe.com') && !node.getAttribute('href').includes(locale)){
+       if(node.getAttribute('href').includes('.adobe.com') && !node.getAttribute('href').includes(locale)){
          node.setAttribute('href',node.getAttribute('href') + '#_dnt');
        }
      }); 
