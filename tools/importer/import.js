@@ -113,7 +113,6 @@ export default {
     let latestOffset = 0;
     let prevOffset = 0;
     allBlockIds.forEach((id) => {
-      console.log("Block id: "+id);
       const currentOffset = parseInt(id.split('-').pop(), 10);
       latestOffset = latestOffset + offsetDiff + currentOffset - prevOffset;
       const block = body.querySelectorAll('div')[latestOffset];
@@ -197,7 +196,6 @@ export default {
       return addedOffset;
     };  
     const createBlocks = (blockName, divOffset) => {
-      console.log("block");
       const offsetDiff = findOffsetDiff();
       const block = body.querySelectorAll('div')[divOffset + offsetDiff];
       switch (blockName) {
