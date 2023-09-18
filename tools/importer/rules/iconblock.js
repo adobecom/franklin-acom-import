@@ -37,14 +37,11 @@ export const createIconBlockFragment3 = async (block, document, url) => {
     .filter(({ page }) => page === url);
 
     const productBlade = fileTypePage[0].productblade;
-    console.log("blade: "+productBlade);
     if(productBlade.includes('photoshop')){
-      console.log("corect")
       iconBlock.href = 'https://main--cc--adobecom.hlx.page/cc-shared/fragments/seo-articles/do-more-photoshop-color-blade';
       iconBlock.textContent = 'https://main--cc--adobecom.hlx.page/cc-shared/fragments/seo-articles/do-more-photoshop-color-blade';
       }
       else if(productBlade.includes('Illustrator')){
-      console.log("wrong");
       iconBlock.href = 'https://main--cc--adobecom.hlx.page/cc-shared/fragments/seo-articles/do-more-illustrator-color-blade';
       iconBlock.textContent = 'https://main--cc--adobecom.hlx.page/cc-shared/fragments/seo-articles/do-more-illustrator-color-blade';  
       }
