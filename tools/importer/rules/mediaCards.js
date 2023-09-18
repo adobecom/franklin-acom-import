@@ -31,12 +31,8 @@ const createTextBlock = (textElement, document) => {
   const table2 = WebImporter.DOMUtils.createTable(textSectionCells, document);
   table2.classList.add('import-table');
   alltables.push(document.createElement('hr'));
-  alltables.push(table1)
-  alltables.push(table2)
-  //alltables.push(document.createElement('hr'));
-  //textElement.replaceWith(table1);
-  //table1.after(table2);
-  //table2.after(document.createElement('hr'));
+  alltables.push(table1);
+  alltables.push(table2);
 };
 
 
@@ -99,47 +95,8 @@ export default function createMediaCardsBlock(block, document) {
   sectionMetaDataTable.classList.add('import-table');
   alltables.push(sectionMetaDataTable);
 
-});  
- 
+});   
   block.replaceWith(...alltables);
-
   }
-
-
-
-  /*const lengthCheck = children.length === 2;
-  const firstElementCheck = children[0]
-    && (children[0].classList.contains('position')
-      || children[0].classList.contains('flex'));
-  const secondElementCheck = children[1] && children[1].classList.contains('flex');
-  const anotherVersionFlag = lengthCheck && firstElementCheck && secondElementCheck;
-  if (anotherVersionFlag) {
-    const cells = [['text'], [children[0]]];
-    const table = WebImporter.DOMUtils.createTable(cells, document);
-    table.classList.add('import-table');
-
-    const flexItemsParent = children[1].querySelector(
-      '.dexter-FlexContainer .dexter-FlexContainer-Items',
-    );
-    const flexItems = [...flexItemsParent.children];
-    flexItems.forEach((flex) => {
-      const cardCells = [['Media']];
-      const row = [];
-      attachBackgroundImage(flex, document);
-      row.push(flex.innerHTML);
-      cardCells.push(row);
-      const cardTable = WebImporter.DOMUtils.createTable(cardCells, document);
-      cardTable.classList.add('import-table');
-      flex.replaceWith(cardTable);
-    });*/
-    
-   //block.before(document.createElement('hr'));
-    /*block.replaceWith(
-      table,
-      ...block.querySelectorAll('.import-table'),
-      sectionMetaDataTable,
-    );
-  //}*/
-  //return anotherVersionFlag;
 
 
