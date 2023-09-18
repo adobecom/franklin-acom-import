@@ -2,7 +2,7 @@
 export default function createPromoColumn(block, document) {
   const elements = [...block.querySelectorAll('.text, .image')];
 
-  const tableName = 'columns (contained)';
+  const tableName = 'Remove this block';
   const cells = [[tableName]];
   cells.push([[]]);
   while (elements[0].parentElement === block.querySelector('.text').parentElement) {
@@ -32,8 +32,9 @@ export default function createPromoColumn(block, document) {
   }
   const sectionMetadataTable = WebImporter.DOMUtils.createTable(sectionMetadata, document);
   sectionMetadataTable.classList.add('import-table');
-
-  block.before(document.createElement('hr'));
-  block.replaceWith(...block.querySelectorAll('.import-table'), table);
-  table.after(sectionMetadataTable);
+ 
+  const emptyTable = [];
+  //block.before(document.createElement('hr'));
+  block.replaceWith(...block.querySelectorAll('.import-table'), emptyTable);
+  //table.after(sectionMetadataTable);
 }

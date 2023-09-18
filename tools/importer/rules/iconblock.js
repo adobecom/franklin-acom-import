@@ -1,5 +1,57 @@
 /* global WebImporter */
 
+export const createIconBlockFragment1 = (block, document) => {
+  const iconBlock = document.createElement('a');
+  iconBlock.href = 'https://main--cc--adobecom.hlx.page/cc-shared/fragments/seo-articles/get-started-notification-blade';
+  iconBlock.textContent = 'https://main--cc--adobecom.hlx.page/cc-shared/fragments/seo-articles/get-started-notification-blade';
+
+ //block.before(document.createElement('hr'));
+  block.replaceWith(iconBlock);
+};
+
+export const createIconBlockFragment2 = (block, document) => {
+  const iconBlock = document.createElement('a');
+  iconBlock.href = 'https://main--cc--adobecom.hlx.page/cc-shared/fragments/seo-articles/express-blade';
+  iconBlock.textContent = 'https://main--cc--adobecom.hlx.page/cc-shared/fragments/seo-articles/express-blade  ';
+
+  block.before(document.createElement('hr'));
+  block.replaceWith(iconBlock);
+};
+
+export const createIconBlockFragment3 = async (block, document, url) => {
+  const shareCells = [['share']];
+  const shareTable = WebImporter.DOMUtils.createTable(
+    shareCells,
+    document,
+  );
+  block.before(document.createElement('hr'));
+  block.replaceWith(shareTable);
+  const iconBlock = document.createElement('a');
+  iconBlock.href = 'https://main--cc--adobecom.hlx.page/cc-shared/fragments/seo-articles/product-blade-illustrator';
+  iconBlock.textContent = 'https://main--cc--adobecom.hlx.page/cc-shared/fragments/seo-articles/product-blade-illustrator';
+  try{
+   const resp = await fetch('../file_type_tags.json');
+    if (!(resp.ok)) return;
+    const json = await resp.json();
+    const fileTypePage = (Array.isArray(json) ? json : json.data)
+    .filter(({ page }) => page === url);
+
+    const productBlade = fileTypePage[0].productblade;
+    if(productBlade.includes('photoshop')){
+      iconBlock.href = 'https://main--cc--adobecom.hlx.page/cc-shared/fragments/seo-articles/do-more-photoshop-color-blade';
+      iconBlock.textContent = 'https://main--cc--adobecom.hlx.page/cc-shared/fragments/seo-articles/do-more-photoshop-color-blade';
+      }
+      else if(productBlade.includes('Illustrator')){
+      iconBlock.href = 'https://main--cc--adobecom.hlx.page/cc-shared/fragments/seo-articles/do-more-illustrator-color-blade';
+      iconBlock.textContent = 'https://main--cc--adobecom.hlx.page/cc-shared/fragments/seo-articles/do-more-illustrator-color-blade';  
+      }
+      shareTable.insertAdjacentElement("afterend", iconBlock);
+      //shareTable.after(iconBlock);
+  }catch (e) {
+    console.log(e);
+  }  
+};
+
 const creativityForAllIconBlock = (block, document) => {
   // background color or background image
   const bgImage = block
@@ -14,6 +66,21 @@ const creativityForAllIconBlock = (block, document) => {
     bgImageElement = document.createElement('img');
     bgImageElement.src = bgImage;
   }
+
+   //icon block button
+   const spectrumButton = block.querySelector('.spectrum-Button');
+   if(spectrumButton?.classList.contains('doccloud-Button--blue')){
+     const btnWrapper = document.createElement('b');
+     btnWrapper.appendChild(spectrumButton.cloneNode(true));
+     spectrumButton.replaceWith(btnWrapper);
+   }
+ 
+   if(spectrumButton?.classList.contains('doccloud-Button--white')){
+     const btnWrapper = document.createElement('i');
+     btnWrapper.appendChild(spectrumButton.cloneNode(true));
+     spectrumButton.replaceWith(btnWrapper);
+   }
+
   const cells = [['icon-block (fullwidth, large)'], [block.cloneNode(true)]];
   const table = WebImporter.DOMUtils.createTable(cells, document);
   table.classList.add('import-table');

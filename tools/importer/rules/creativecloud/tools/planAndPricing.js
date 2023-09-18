@@ -1,6 +1,12 @@
 /* global WebImporter */
 export default function createPlanAndPricing(block, document) {
-  const allImages = [...block.querySelectorAll('.image')];
+  const planAndPricing = document.createElement('a');
+  planAndPricing.href = 'https://main--cc--adobecom.hlx.page/cc-shared/fragments/seo-articles/tools/plan-blade-icon-4up';
+  planAndPricing.textContent = 'https://main--cc--adobecom.hlx.page/cc-shared/fragments/seo-articles/tools/plan-blade-icon-4up';
+
+  block.before(document.createElement('hr'));
+  block.replaceWith(planAndPricing);  
+  /*const allImages = [...block.querySelectorAll('.image')];
   const allText = [...block.querySelectorAll('.text')];
   const button = block.querySelector('.cta');
 
@@ -43,5 +49,5 @@ export default function createPlanAndPricing(block, document) {
     table2.after(table3);
   } else {
     table1.after(table3);
-  }
+  }*/
 }
