@@ -58,16 +58,18 @@ export default function createMetadataBlock(document, cardMetadataTable) {
     meta.Description = desc.content;
   }
 
-  const canonical = document.querySelector('[rel="canonical"]');
-  if (canonical) {
-    meta.Canonical = canonical.href;
-  }
-
   const img = document.querySelector('[property="og:image"]');
   if (img && img.content) {
     const el = document.createElement('img');
     el.src = img.content;
     meta.Image = el;
+  }
+    
+  const canonical = document.querySelector('[rel="canonical"]');
+  if (canonical && canonical.href) {
+     const el = document.createElement('a');
+     el.href = canonical.href;
+     meta.Canonical = el;
   }
 
   const block = WebImporter.Blocks.getMetadataBlock(document, meta);
