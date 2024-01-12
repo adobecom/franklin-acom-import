@@ -58,6 +58,11 @@ export default function createMetadataBlock(document, cardMetadataTable) {
     meta.Description = desc.content;
   }
 
+  const canonical = document.querySelector('[rel="canonical"]');
+  if (canonical) {
+    meta.Canonical = canonical.href;
+  }
+
   const img = document.querySelector('[property="og:image"]');
   if (img && img.content) {
     const el = document.createElement('img');
