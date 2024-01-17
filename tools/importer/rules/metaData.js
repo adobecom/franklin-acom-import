@@ -64,6 +64,13 @@ export default function createMetadataBlock(document, cardMetadataTable) {
     el.src = img.content;
     meta.Image = el;
   }
+    
+  const canonical = document.querySelector('[rel="canonical"]');
+  if (canonical && canonical.href) {
+     const el = document.createElement('a');
+     el.href = canonical.href;
+     meta.Canonical = el;
+  }
 
   const block = WebImporter.Blocks.getMetadataBlock(document, meta);
   main.append(document.createElement('hr'));
