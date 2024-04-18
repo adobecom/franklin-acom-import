@@ -27,5 +27,5 @@ export default function createBreadcrumbBlock (document){
     document
   );
 
-  main.insertBefore(breadcrumbsBlockTableComplete, main.firstChild);
+  main.append(breadcrumbsBlockTableComplete);
 }
